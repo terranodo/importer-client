@@ -1,4 +1,4 @@
-import {GET_UPLOAD_ID, SET_UPLOAD_ID, GET_UPLOAD_STATUS, SET_UPLOAD_STATUS, GET_UPLOAD_COUNT, SET_UPLOAD_COUNT, UPLOAD_FILE_SUCCESS, CONFIGURE_SUCCESS, UPLOADED_DATA_SUCCESS, IMPORT_ALL_SUCCESS} from '../actiontypes'
+import {GET_UPLOAD_ID, SET_UPLOAD_ID, GET_UPLOAD_STATUS, SET_UPLOAD_STATUS, GET_UPLOAD_COUNT, SET_UPLOAD_COUNT, UPLOAD_FILE_SUCCESS, CONFIGURE_SUCCESS, UPLOADED_DATA_SUCCESS, IMPORT_ALL_SUCCESS, IMPORT_ALL_STARTED} from '../actiontypes'
 
 import {uploadFiles, configure, uploadedData, importAll} from '../../services/geonode';
 
@@ -29,6 +29,12 @@ export function importAllSuccess(result) {
   return {
     type: IMPORT_ALL_SUCCESS,
     result
+  }
+}
+export function importAllStarted() {
+  return {
+    type: IMPORT_ALL_STARTED,
+    startImport: true
   }
 }
 export function upload(files) {
@@ -62,7 +68,9 @@ export function importAllLayers() {
     const state = getState();
     let server = state.server.url;
     let id = state.uploads.id;
+    dispatch(importAllStarted());
     return importAll(server, id)
     .then((json) => dispatch(importAllSuccess(json)))
+    .then((json) => dispatch(getUploadedData()))
   }
 }

@@ -1,4 +1,4 @@
-import {GET_UPLOAD_ID, SET_UPLOAD_ID, GET_UPLOAD_STATUS, SET_UPLOAD_STATUS, GET_UPLOAD_COUNT, SET_UPLOAD_COUNT, UPLOAD_FILE_SUCCESS, CONFIGURE_SUCCESS, UPLOADED_DATA_SUCCESS, IMPORT_ALL_SUCCESS} from '../actiontypes'
+import {GET_UPLOAD_ID, SET_UPLOAD_ID, GET_UPLOAD_STATUS, SET_UPLOAD_STATUS, GET_UPLOAD_COUNT, SET_UPLOAD_COUNT, UPLOAD_FILE_SUCCESS, CONFIGURE_SUCCESS, UPLOADED_DATA_SUCCESS, IMPORT_ALL_SUCCESS, IMPORT_ALL_STARTED} from '../actiontypes'
 
 const defaultState = {
   id: undefined,
@@ -6,7 +6,10 @@ const defaultState = {
   count: 0,
   success: false,
   files: undefined,
-  data: undefined
+  data: undefined,
+  import: {
+    started: false
+  }
 };
 
 const uploads = (state = defaultState, action) => {
@@ -28,7 +31,11 @@ const uploads = (state = defaultState, action) => {
       })
     case IMPORT_ALL_SUCCESS:
       return Object.assign({}, state, {
-        import: action.result
+        import: { started: false }
+      })
+    case IMPORT_ALL_STARTED:
+      return Object.assign({}, state, {
+        import: { started: true }
       })
     case CONFIGURE_SUCCESS:
       return Object.assign({}, state, {

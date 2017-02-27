@@ -10,3 +10,6 @@ export function getUploadData(state) {
 export function uploadId(state) {
   return state.uploads.id;
 }
+export function importStarted(state) {
+  return state.uploads.import.started;
+}

@@ -3,7 +3,7 @@ import thunk from'redux-thunk';
 
 import {getUploadId, upload, configureUploads, getUploadedData, importAllLayers, __RewireAPI__ as actionsRewireAPI} from '../../../src/state/uploads/actions';
 
-import {GET_UPLOAD_ID, SET_UPLOAD_ID, GET_UPLOAD_STATUS, SET_UPLOAD_STATUS, GET_UPLOAD_COUNT, SET_UPLOAD_COUNT, UPLOAD_FILE_SUCCESS, CONFIGURE_SUCCESS, UPLOADED_DATA_SUCCESS, IMPORT_ALL_SUCCESS} from '../../../src/state/actiontypes';
+import {GET_UPLOAD_ID, SET_UPLOAD_ID, GET_UPLOAD_STATUS, SET_UPLOAD_STATUS, GET_UPLOAD_COUNT, SET_UPLOAD_COUNT, UPLOAD_FILE_SUCCESS, CONFIGURE_SUCCESS, UPLOADED_DATA_SUCCESS, IMPORT_ALL_SUCCESS, IMPORT_ALL_STARTED} from '../../../src/state/actiontypes';
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
@@ -71,8 +71,11 @@ describe('#importAllLayers', () => {
     actionsRewireAPI.__Rewire__('importAll', () => {
       return Promise.resolve(result);
     });
+    actionsRewireAPI.__Rewire__('uploadedData', () => {
+      return Promise.resolve(result);
+    });
     const store = mockStore({server: { url: ''}, uploads: { id: 1 }});
-    const expectedAction = [{type: IMPORT_ALL_SUCCESS, result: result}];
+    const expectedAction = [{type: IMPORT_ALL_STARTED, startImport: true},{type: IMPORT_ALL_SUCCESS, result: result},{type: UPLOADED_DATA_SUCCESS, result: result}];
     return store.dispatch(importAllLayers()).then( () => {
       assert.deepEqual(store.getActions(), expectedAction);
     });
