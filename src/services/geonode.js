@@ -18,14 +18,44 @@ const createRequestObject = function(method, body, contentType = 'application/js
       body: body
     };
 };
+
 export const uploadFiles = (server, files) => {
 	var data = new FormData();
   files.forEach((file)=> {
     data.append('file', file);
   });
 	var request = createRequestObject('POST', data);
-  var requestPath = server + 'uploads/new/json';
+  var requestPath = server + '/uploads/new/json';
   return fetch(requestPath,request)
     .then((response) => response.json())
     .catch((ex) => Promise.reject(ex));
-}
+};
+
+export const importAll = (server, id) => {
+	var request = createRequestObject('GET', '');
+  var requestPath = `${server}/importer-api/data/${id}/import_all_layers/`;
+  return fetch(requestPath,request)
+    .then((response) => response.json())
+    .catch((ex) => Promise.reject(ex));
+};
+export const configure = (server, id, config) => {
+	var request = createRequestObject('POST', config);
+  var requestPath = `${server}/importer-api/data-layers/${id}/configure/`;
+  return fetch(requestPath,request)
+    .then((response) => response.json())
+    .catch((ex) => Promise.reject(ex));
+};
+export const allUploadedData = (server) => {
+	var request = createRequestObject('GET', '');
+  var requestPath = `${server}/importer-api/data/`;
+  return fetch(requestPath,request)
+    .then((response) => response.json())
+    .catch((ex) => Promise.reject(ex));
+};
+export const uploadedData = (server, id) => {
+	var request = createRequestObject('GET', '');
+  var requestPath = `${server}/importer-api/data/${id}/`;
+  return fetch(requestPath,request)
+    .then((response) => response.json())
+    .catch((ex) => Promise.reject(ex));
+};
