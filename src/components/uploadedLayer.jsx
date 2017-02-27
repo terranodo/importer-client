@@ -18,8 +18,9 @@ class UploadedLayer extends React.PureComponent {
   };
   render() {
     return (<div>
-              Import Status: {this._importStatus()}
-              Name: {this._name()}
+              <p><b>Import Status:</b> {this._importStatus()}</p>
+              <p><b>Name:</b> {this._name()}</p>
+              <p><button>Create Layer</button></p>
             </div>)
   }
 };
