@@ -6,7 +6,7 @@ should();
 import ReactTestUtils from 'react-addons-test-utils';
 import { shallow } from 'enzyme';
 
-import Importer from '../src/importer.jsx';
+import Importer from '../src/components/importer';
 import Step from '../src/components/step';
 import UploaderLink from '../src/components/uploadLink';
 

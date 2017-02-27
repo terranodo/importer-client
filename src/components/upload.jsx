@@ -2,7 +2,7 @@ import React from 'react';
 
 import Dropzone from 'react-dropzone';
 import {uploadFiles} from '../services/geonode';
-import {uploadSuccess, uploadId, uploadData, getUploadData} from '../state/uploads/selectors';
+import {uploadSuccess, uploadId, uploadData, getUploadData, importStarted} from '../state/uploads/selectors';
 import UploadedDataLink from './uploadedDataLink';
 
 class Uploader extends React.PureComponent {
@@ -11,34 +11,20 @@ class Uploader extends React.PureComponent {
   }
   constructor(props) {
     super(props);
-    this.success = false;
-  }
-  componentWillReceiveProps(nextProps) {
-    if(uploadSuccess(nextProps) && !uploadData(nextProps)) {
-      this.success = true;
-      this.props.getUploadedFiles();
-    }
-    if(uploadData(nextProps)) {
-      this.data = getUploadData(nextProps);
+    this.state = {
+      text: "Drop a file here or click to open upload window."
     }
   }
   onDrop(files) {
     this.props.uploadFiles(files);
+    this.setState({ text: "Uploading..."});
   }
   render() {
-    let upload = undefined;
-    if(this.success && this.data) {
-      upload = (<UploadedDataLink data={this.data}></UploadedDataLink>);
-    }else {
-      upload = (
-          <Dropzone onDrop={this.onDrop.bind(this)}>
-            <div>Try dropping some files here, or click to select files to upload.</div>
-          </Dropzone>
-      );
-    }
     return (
       <div>
-        {upload}
+        <Dropzone multiple={false} onDrop={this.onDrop.bind(this)}>
+          <div>{this.state.text}</div>
+        </Dropzone>
       </div>
     )
   }

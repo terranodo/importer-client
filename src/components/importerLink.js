@@ -1,5 +1,5 @@
 import {connect} from 'react-redux';
-import Uploader from './upload'
+import Importer from './importer'
 import {upload, getUploadedData} from '../state/uploads/actions'
 
 function mapStateToProps(state) {
@@ -11,14 +11,14 @@ function mapStateToProps(state) {
 }
 const mapDispatchToProps = (dispatch) => {
   return {
-    uploadFiles: (files) => {
-      dispatch(upload(files))
-    },
+    getUploadedFiles: () => {
+      dispatch(getUploadedData());
+    }
   }
 }
-const UploaderLink = connect(
+const ImporterLink= connect(
   mapStateToProps,
   mapDispatchToProps
-)(Uploader);
+)(Importer);
 
-export default UploaderLink;
+export default ImporterLink;
