@@ -13,16 +13,16 @@ class Uploader extends React.PureComponent {
     this.success = false;
   }
   componentWillReceiveProps(nextProps) {
-    if(uploadSuccess(nextProps)) {
+    if(uploadSuccess(nextProps) && !uploadData(nextProps)) {
       this.success = true;
       this.props.getUploadedFiles();
     }
-    if(uploadData) {
-      this.data = getUploadData();
+    if(uploadData(nextProps)) {
+      this.data = getUploadData(nextProps);
     }
   }
   onDrop(files) {
-    this.props.uploadFiles(this.props.server.url, files);
+    this.props.uploadFiles(files);
   }
   render() {
     let upload = undefined;

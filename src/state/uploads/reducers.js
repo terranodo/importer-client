@@ -18,7 +18,7 @@ const uploads = (state = defaultState, action) => {
     case UPLOAD_FILE_SUCCESS:
       return Object.assign({}, state, {
         id: action.result.id,
-        status: action.result.status,
+        status: action.result.state,
         count: action.result.count,
         success: true
       })

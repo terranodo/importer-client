@@ -26,7 +26,7 @@ describe('uploads', () => {
   });
   describe('UPLOAD_FILE_SUCCESS', () => {
     it('sets the upload id, file count, success, status in state', () => {
-      let result = { id: 1, status: 'working', count: 1};
+      let result = { id: 1, state: 'working', count: 1};
       let action = { type: UPLOAD_FILE_SUCCESS, result};
       let state = Object.assign({}, defaultState, {id: 1, status: 'working', count: 1, success: true});
       assert.deepEqual(uploads(undefined, action),state);

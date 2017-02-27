@@ -1,8 +1,8 @@
 export function uploadSuccess(state) {
-  return (state.uploads.status === "success")
+  return (state.uploads.status === "UPLOADED")
 }
 export function uploadData(state) {
-  return (state.uploads.data.length > 0)
+  return (state.uploads.data) ? true : false
 }
 export function getUploadData(state) {
   return state.uploads.data;

@@ -3,7 +3,7 @@ import {uploadSuccess, uploadData, getUploadData, uploadId} from '../../../src/s
 describe('#uploadSuccess', () => {
   describe('status is success', () => {
     it('returns true', () => {
-      assert.equal(uploadSuccess({uploads: { status: "success"}}), true);
+      assert.equal(uploadSuccess({uploads: { status: "UPLOADED"}}), true);
     });
   });
   describe('status is not set', () => {
@@ -18,9 +18,9 @@ describe('#uploadData', () => {
       assert.equal(uploadData({uploads: { data: [ {} ]}}), true);
     });
   });
-  describe('data is empty', () => {
+  describe('data is undefined', () => {
     it('returns false', () => {
-      assert.equal(uploadData({uploads: { data: []}}), false);
+      assert.equal(uploadData({uploads: { data: undefined}}), false);
     });
   });
 })

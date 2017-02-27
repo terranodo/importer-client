@@ -28,16 +28,16 @@ export function configureSuccess(result) {
 export function upload(files) {
   return (dispatch, getState) => {
     const state = getState();
-    let server = state.server.url; //need to be tested
-    return uploadFiles(server, [])
+    let server = state.server.url;
+    return uploadFiles(server, files)
     .then((json) => dispatch(uploadFileSuccess(json)))
-    //.then(() => dispatch(configure));
   }
 }
 export function getUploadedData() {
   return (dispatch, getState) => {
     const state = getState();
     let server = state.server.url;
+    let id = state.uploads.id;
     return uploadedData(server, id)
     .then((json) => dispatch(uploadedDataSuccess(json)))
   }
@@ -45,7 +45,7 @@ export function getUploadedData() {
 export function configureUploads() {
   return (dispatch, getState) => {
     const state = getState();
-    let server = state.server.url; //need to be tested
+    let server = state.server.url;
     let id = state.uploads.id;
     return configure(server, id, {})
     .then((json) => dispatch(configureSuccess(json)));

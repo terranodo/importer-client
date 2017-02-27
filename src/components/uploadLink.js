@@ -3,10 +3,10 @@ import Uploader from './upload'
 import {upload, getUploadedData} from '../state/uploads/actions'
 
 function mapStateToProps(state) {
-  const {server, upload} = state;
+  const {server, uploads} = state;
   return {
     server,
-    upload
+    uploads
   };
 }
 const mapDispatchToProps = (dispatch) => {

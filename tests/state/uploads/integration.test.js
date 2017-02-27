@@ -9,7 +9,7 @@ describe('upload files', () => {
   let store;
   beforeEach(() => {
     store = createStore(combineReducers({uploads}));
-    store.dispatch(uploadFileSuccess({status: 'success'}));
+    store.dispatch(uploadFileSuccess({state: 'UPLOADED'}));
   })
   describe('#uploadSuccess', () => {
     it('returns true', () => {
