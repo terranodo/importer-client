@@ -38,6 +38,7 @@ module.exports = {
         loader: 'babel-loader',
         exclude: /node_modules/
       },
+      { test: /\.json$/, loader: "json-loader" },
       { test: /\.css$/, loader: "style-loader!css-loader" },
       { test: /\.(png|gif|jpg|jpeg|svg|otf|ttf|eot|woff)$/, loader: 'file-loader' }
     ]

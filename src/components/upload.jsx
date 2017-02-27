@@ -3,6 +3,7 @@ import React from 'react';
 import Dropzone from 'react-dropzone';
 import {uploadFiles} from '../services/geonode';
 import {uploadSuccess, uploadId, uploadData, getUploadData} from '../state/uploads/selectors';
+import UploadedDataLink from './uploadedDataLink';
 
 class Uploader extends React.PureComponent {
   static propTypes = {
@@ -27,7 +28,7 @@ class Uploader extends React.PureComponent {
   render() {
     let upload = undefined;
     if(this.success && this.data) {
-      upload = (<UploadedData data={this.data}></UploadedData>);
+      upload = (<UploadedDataLink data={this.data}></UploadedDataLink>);
     }else {
       upload = (
           <Dropzone onDrop={this.onDrop.bind(this)}>
