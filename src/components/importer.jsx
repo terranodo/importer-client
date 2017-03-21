@@ -6,15 +6,16 @@ global.ReactDOM = ReactDOM;
 import UploaderLink from './uploadLink';
 import UploadedDataLink from './uploadedDataLink';
 import {uploadSuccess, uploadId, uploadData, getUploadData, importStarted} from '../state/uploads/selectors';
-import Step from './step';
+import Wizard from './step';
 
 class Importer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       step: 1,
-      steps: 1
+      steps: 2
     };
+    this.data = {layers: [{name: "Test"},{name: "Test"}]};
   }
   componentWillReceiveProps(nextProps) {
     if(uploadSuccess(nextProps) && !uploadData(nextProps)) {
@@ -46,9 +47,10 @@ class Importer extends React.Component {
     if(this.state.step === 2) {
       stepElem = (<UploadedDataLink data={this.data}></UploadedDataLink>);
     }
+    let stepContent = ["Upload Layer", "Import/Create Layer(s)"];
     return (
       <div>
-        <Step showButtons={false} step={this.state.step} steps={this.state.steps} prev={this.prev.bind(this)} next={this.next.bind(this)}>{stepElem}</Step>
+        <Wizard stepContent={stepContent} showButtons={false} step={this.state.step} steps={this.state.steps} prev={this.prev.bind(this)} next={this.next.bind(this)}>{stepElem}</Wizard>
       </div>
     )
   }

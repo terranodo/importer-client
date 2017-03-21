@@ -1,4 +1,5 @@
 import React from 'react';
+import RaisedButton from 'material-ui/RaisedButton';
 
 import {uploadedData} from '../services/geonode';
 import {uploadSuccess} from '../state/uploads/selectors';
@@ -22,7 +23,7 @@ class UploadedData extends React.PureComponent {
             {this.props.data.layers.map(function(layer, index){
               return <UploadedLayer key={index} layer={layer}></UploadedLayer>;
             })}
-            <button onClick={this._handleImport.bind(this)}>Import all Layers</button>
+            <RaisedButton primary={true} onClick={this._handleImport.bind(this)} label={"Import all Layers"}/>
             </div>)
   }
 };
