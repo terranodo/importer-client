@@ -7,13 +7,15 @@ module.exports = function (config) {
   config.set({
     browsers: [ 'PhantomJS' ],
     files: [
+      'node_modules/whatwg-fetch/fetch.js',
+      'node_modules/babel-polyfill/dist/polyfill.js',
       'tests/tests.bundle.js',
       { pattern: 'src/**/*', watched: false, included: false, served: true, nocache: true }
     ],
     preprocessors: {
       'tests/tests.bundle.js': [ 'webpack', 'sourcemap' ]
     },
-    frameworks: ['mocha'],
+    frameworks: ['intl-shim', 'mocha', 'chai'],
     reporters: [ 'mocha'],
     webpack: webpackConfig,
     webpackServer: {
