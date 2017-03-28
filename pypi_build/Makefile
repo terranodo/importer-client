@@ -7,6 +7,7 @@ VERSION=`cat $(FILE)`
 .PHONY: build-js build-django-app package-app release
 
 build-js:
+	cd $(MKFILE_DIR)..; npm i
 	cd $(MKFILE_DIR)..; npm run build
 
 build-django-app: build-js
