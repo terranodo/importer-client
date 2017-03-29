@@ -10,7 +10,7 @@ export const getCRSFToken = () => {
 const createRequestObject = function(method, body, contentType = 'application/json') {
   let request = createRequestObjectWithBody(method, body);
   request.headers["Content-Type"] = contentType;
-  return request
+  return request;
 };
 const createRequestObjectWithBody = function(method, body) {
   let request = createSimpleRequestObject(method);
@@ -26,6 +26,10 @@ const createSimpleRequestObject = function(method) {
           },
     };
 };
+
+export const createLayerConfigWithName = (name) => {
+  return { index: 0, permissions: {'users':{'AnonymousUser':['change_layer_data', 'download_resourcebase', 'view_resourcebase']}}, configureTime: false, convert_to_date: [], editable: true, start_date: null, end_date: null, layer_name: name}
+}
 
 export const uploadFiles = (server, files) => {
 	var data = new FormData();
@@ -47,7 +51,7 @@ export const importAll = (server, id) => {
     .catch((ex) => Promise.reject(ex));
 };
 export const configure = (server, id, config) => {
-	var request = createRequestObjectWithBody('POST', config);
+	var request = createRequestObject('POST', JSON.stringify(config));
   var requestPath = `${server}/importer-api/data-layers/${id}/configure/`;
   return fetch(requestPath,request)
     .then((response) => response.json())

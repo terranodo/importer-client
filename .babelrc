@@ -2,7 +2,16 @@
 	"presets": ["es2015", "stage-1", "react"],
   "env": {
     "test": {
-      "plugins": ["rewire"]
+			"plugins": [
+                [
+                    "istanbul", {
+                        "exclude": [
+                            "tests/*.js"
+                        ]
+                    }
+                ],
+                "rewire"
+            ]
     }
   }
 }

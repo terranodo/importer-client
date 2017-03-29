@@ -1,4 +1,4 @@
-import {uploadSuccess, uploadData, getUploadData, uploadId} from '../../../src/state/uploads/selectors'
+import {uploadSuccess, uploadData, getUploadData, uploadId, isLayerImported, singleImportStarted} from '../../../src/state/uploads/selectors'
 
 describe('#uploadSuccess', () => {
   describe('status is success', () => {
@@ -33,4 +33,28 @@ describe('#uploadId', () => {
   it('returns id', () => {
     assert.equal(uploadId({uploads: {id: 1}}), 1);
   });
+});
+describe('#isLayerImported', () => {
+  describe('was successful', () => {
+    it('returns true', () => {
+      assert.equal(isLayerImported({uploads: { importLayers: { single: { 1: { success: true}}}}},1), true);
+    });
+  })
+  describe('not successful', () => {
+    it('returns false', () => {
+      assert.equal(isLayerImported({uploads: { importLayers: { single: { }}}},1),false);
+    });
+  })
+});
+describe('#singleImportStarted', () => {
+  describe('is import started', () => {
+    it('returns true', () => {
+      assert.equal(singleImportStarted({uploads: { importLayers: { single: { 1: { started: true}}}}},1), true);
+    });
+  })
+  describe('import not started', () => {
+    it('returns false', () => {
+      assert.equal(singleImportStarted({uploads: { importLayers: { single: { }}}},1),false);
+    });
+  })
 });

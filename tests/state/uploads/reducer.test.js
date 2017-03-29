@@ -12,8 +12,9 @@ describe('uploads', () => {
       success: false,
       files: undefined,
       data: undefined,
-      import: {
-        started: false
+      importLayers: {
+        started: false,
+        single: {}
       }
     };
   });
@@ -38,8 +39,8 @@ describe('uploads', () => {
   describe('CONFIGURE_SUCCESS', () => {
     it('sets the success state for each file', () => {
       let result = { id: 1, status: 'success', count: 1};
-      let action = { type: CONFIGURE_SUCCESS, result};
-      let state = Object.assign({}, defaultState, {id: 1, status: 'success', count: 1, success: true});
+      let action = { type: CONFIGURE_SUCCESS, index: 1, result};
+      let state = Object.assign({}, defaultState, {importLayers: { single: {1: { success: true}}}});
       assert.deepEqual(uploads(undefined, action),state);
     });
   });
@@ -55,7 +56,7 @@ describe('uploads', () => {
     it('sets the returned uploaded file data', () => {
       let result = { id: 1, status: "UPLOADED" };
       let action = { type: IMPORT_ALL_SUCCESS, result};
-      let state = Object.assign({}, defaultState, {import: { started: false}});
+      let state = Object.assign({}, defaultState, {importLayers: { started: false}});
       assert.deepEqual(uploads(undefined, action),state);
     });
   });
@@ -63,7 +64,7 @@ describe('uploads', () => {
     it('sets the returned uploaded file data', () => {
       let result = { id: 1, status: "UPLOADED" };
       let action = { type: IMPORT_ALL_STARTED, result};
-      let state = Object.assign({}, defaultState, {import: { started: true}});
+      let state = Object.assign({}, defaultState, {importLayers: { started: true}});
       assert.deepEqual(uploads(undefined, action),state);
     });
   });

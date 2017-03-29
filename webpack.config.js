@@ -16,7 +16,7 @@ if(PROD) {
 
 module.exports = {
 	entry: {
-    App: [APP_DIR + '/src/app.jsx']
+    Importer: [APP_DIR + '/src/importer.js']
   },
 	output: {
     path: BUILD_DIR,

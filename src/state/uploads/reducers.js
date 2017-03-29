@@ -1,4 +1,4 @@
-import {GET_UPLOAD_ID, SET_UPLOAD_ID, GET_UPLOAD_STATUS, SET_UPLOAD_STATUS, GET_UPLOAD_COUNT, SET_UPLOAD_COUNT, UPLOAD_FILE_SUCCESS, CONFIGURE_SUCCESS, UPLOADED_DATA_SUCCESS, IMPORT_ALL_SUCCESS, IMPORT_ALL_STARTED} from '../actiontypes'
+import {GET_UPLOAD_ID, SET_UPLOAD_ID, GET_UPLOAD_STATUS, SET_UPLOAD_STATUS, GET_UPLOAD_COUNT, SET_UPLOAD_COUNT, UPLOAD_FILE_SUCCESS, UPLOAD_FILE_FAILURE, CONFIGURE_SUCCESS, UPLOADED_DATA_SUCCESS, IMPORT_ALL_SUCCESS, IMPORT_ALL_STARTED, IMPORT_STARTED} from '../actiontypes'
 
 const defaultState = {
   id: undefined,
@@ -7,16 +7,23 @@ const defaultState = {
   success: false,
   files: undefined,
   data: undefined,
-  import: {
-    started: false
+  importLayers: {
+    started: false,
+    single: {}
   }
 };
 
 const uploads = (state = defaultState, action) => {
+  let single = {};
   switch(action.type) {
     case SET_UPLOAD_ID:
       return Object.assign({}, state, {
         id: action.uploadId
+      })
+    case UPLOAD_FILE_FAILURE:
+      return Object.assign({}, state, {
+        status: 'FAILED',
+        success: false,
       })
     case UPLOAD_FILE_SUCCESS:
       return Object.assign({}, state, {
@@ -31,18 +38,21 @@ const uploads = (state = defaultState, action) => {
       })
     case IMPORT_ALL_SUCCESS:
       return Object.assign({}, state, {
-        import: { started: false }
+        importLayers: { started: false }
       })
     case IMPORT_ALL_STARTED:
       return Object.assign({}, state, {
-        import: { started: true }
+        importLayers: { started: true }
+      })
+    case IMPORT_STARTED:
+      single[action.index] = { started: true }
+      return Object.assign({}, state, {
+        importLayers: {single: single}
       })
     case CONFIGURE_SUCCESS:
+      single[action.index] = { success: true }
       return Object.assign({}, state, {
-        id: action.result.id,
-        status: action.result.status,
-        count: action.result.count,
-        success: true
+        importLayers: {single: single}
       })
     default:
       return state;

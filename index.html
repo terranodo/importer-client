@@ -8,8 +8,10 @@
 </head>
 <body>
   <div id='main'></div>
-  <script src="/dist/App.js"></script>
+  <script src="/dist/Importer.js"></script>
   <script >
+    var importer = new Importer('main', { server: 'http://localhost:8000'});
+    importer.view();
 	</script>
 </body>
 </html>
