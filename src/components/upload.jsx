@@ -1,8 +1,9 @@
 import React from 'react';
 
 import Dropzone from 'react-dropzone';
+import CircularProgress from 'material-ui/CircularProgress';
 import {uploadFiles} from '../services/geonode';
-import {uploadSuccess, uploadId, uploadData, getUploadData, importStarted} from '../state/uploads/selectors';
+import {uploadSuccess, uploadFailed, uploadId, uploadData, getUploadData, importStarted} from '../state/uploads/selectors';
 import UploadedDataLink from './uploadedDataLink';
 
 class Uploader extends React.PureComponent {
@@ -12,18 +13,25 @@ class Uploader extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      text: "Drop a file here or click to open upload window."
+      text: "Drop a file here or click to open upload window.",
+      showProgress: false
+    }
+  }
+  componentWillReceiveProps(nextProps) {
+    if(uploadFailed(nextProps)) {
+      this.setState({text: 'Upload Failed', showProgress: false});
     }
   }
   onDrop(files) {
     this.props.uploadFiles(files);
-    this.setState({ text: "Uploading..."});
+    this.setState({ showProgress: true});
   }
   render() {
+    const progress = this.state.showProgress ? (<CircularProgress />) : this.state.text;
     return (
       <div>
         <Dropzone multiple={false} onDrop={this.onDrop.bind(this)}>
-          <div>{this.state.text}</div>
+          <div>{progress}</div>
         </Dropzone>
       </div>
     )

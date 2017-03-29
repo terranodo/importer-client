@@ -20,10 +20,10 @@ class UploadedData extends React.PureComponent {
   }
   render() {
     return (<div>
-            {this.props.data.layers.map(function(layer, index){
-              return <UploadedLayer key={index} layer={layer}></UploadedLayer>;
-            })}
             <RaisedButton primary={true} onClick={this._handleImport.bind(this)} label={"Import all Layers"}/>
+            {this.props.data.layers.map(function(layer, index){
+              return <UploadedLayer id={index} key={index} layer={layer}></UploadedLayer>;
+            })}
             </div>)
   }
 };

@@ -16,7 +16,7 @@ module.exports = function (config) {
       'tests/tests.bundle.js': [ 'webpack', 'sourcemap' ]
     },
     frameworks: ['intl-shim', 'mocha', 'chai'],
-    reporters: [ 'mocha'],
+    reporters: [ 'mocha', 'coverage'],
     webpack: webpackConfig,
     webpackServer: {
       noInfo: true
@@ -25,7 +25,6 @@ module.exports = function (config) {
 		coverageReporter: {
       dir: 'reports',
       reporters:[
-        {type: 'html', subdir: 'html/'},
         {type: 'lcovonly', subdir: 'coverage/', file: 'lcov.info'},
       ]
     }

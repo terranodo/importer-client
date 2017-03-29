@@ -18,16 +18,20 @@ class Importer extends React.Component {
     this.data = {layers: [{name: "Test"},{name: "Test"}]};
   }
   componentWillReceiveProps(nextProps) {
+    clearTimeout(this.timeout);
     if(uploadSuccess(nextProps) && !uploadData(nextProps)) {
       this.props.getUploadedFiles();
     }
     if(importStarted(nextProps)) {
-      this.props.getUploadedFiles();
+      this.startPoll();
     }
     if(uploadData(nextProps)) {
       this.data = getUploadData(nextProps);
       this.setState({ step: 2});
     }
+  }
+  componentWillUnmount() {
+    clearTimeout(this.timeout);
   }
   next() {
     this.setState({
@@ -38,6 +42,9 @@ class Importer extends React.Component {
     this.setState({
       step: this.state.step-1
     })
+  }
+  startPoll (){
+   this.timeout = setTimeout(() =>  this.props.getUploadedFiles(), 2000);
   }
   render() {
     let stepElem;

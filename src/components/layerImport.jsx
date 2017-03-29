@@ -5,24 +5,33 @@ import TextField from 'material-ui/TextField';
 import Toggle from 'material-ui/Toggle';
 import Wizard from './step';
 import RaisedButton from 'material-ui/RaisedButton';
+import FlatButton from 'material-ui/FlatButton';
+
+import {isLayerImported, singleImportStarted} from '../state/uploads/selectors';
 
 export default class LayerImport extends React.PureComponent {
   static propTypes = {
     layer: React.PropTypes.object.isRequired,
-    show: React.PropTypes.bool
+    show: React.PropTypes.bool,
+    id: React.PropTypes.number
   };
   constructor(props) {
     super(props);
     this.state= {
       show: false,
       step: 1,
-      steps: 4,
+      steps: 2,
+      importing: false,
       layerName: props.layer.name
     }
-    this.stepContent = ["Name", "Enable Time", "History", "Import"];
+    this.stepContent = ["Name", "Import"];
   };
   componentWillReceiveProps(nextProps) {
-    this.setState({show: nextProps.show});
+    if(isLayerImported(nextProps, nextProps.id)) {
+      this._handleClose();
+      this.setState({step: 1, layerName: nextProps.layer.name});
+    }
+    this.setState({importing: singleImportStarted(nextProps, nextProps.id) });
   }
   next() {
     this.setState({
@@ -34,30 +43,27 @@ export default class LayerImport extends React.PureComponent {
       step: this.state.step-1
     })
   }
-  _enableTime() {
-    this.stepContent = ["Name", "Enable Time", "Configure Time", "History", "Import"];
-    this.setState({steps: 5});
-  }
-  _disableTime() {
-    this.stepContent = ["Name", "Enable Time", "History", "Import"];
-    this.setState({steps: 4});
-  }
   _handleClose() {
     this.setState({show: false});
+    this.setState({step: 1, layerName: this.props.layer.name});
+  }
+  _handleOpen() {
+    this.setState({show: true});
   }
   _handleNameChange(event, newValue) {
     this.setState({layerName: newValue});
   }
-  _handleHistoryChange(event, isInputChecked) {
-  }
-  _handleTimeChange(event, isInputChecked) {
-    isInputChecked ? this._enableTime() : this._disableTime();
-  }
   _handleImport() {
+    this.props.configureLayerWithName(this.state.layerName, this.props.id);
+    this.setState({importing: true});
   }
   render() {
     let stepElem;
     let toggleStyle = { margin: 10 }
+    let buttonLabel = this.state.importing ? 'Importing ...' : 'Create Layer';
+    let actions = []
+    let defaultAction = (<FlatButton primary={false} onClick={this._handleClose.bind(this)} label={"Cancel"}/>)
+    actions.push(defaultAction);
     if(this.state.step === 1) {
       stepElem = (<div>
                     <h1>Layer Name</h1>
@@ -67,44 +73,24 @@ export default class LayerImport extends React.PureComponent {
                       onChange={this._handleNameChange.bind(this)}/>
                   </div>);
     }
-    if(this.state.step === 2) {
-      stepElem = (<div>
-                  <h1>Does the dataset have time attributes?</h1>
-                  <Toggle
-                       label="Yes"
-                       style={toggleStyle}
-                       onToggle={this._handleTimeChange.bind(this)}
-                     />
-                 </div>);
-    }
-    if(this.state.step === 3 && this.state.steps === 5){
-      stepElem = (<div>
-                  <h1>Configure your time attributes:</h1>
-                 </div>);
-    }
-    if((this.state.step === 3 && this.state.steps === 4) || (this.state.step === 4 && this.state.steps === 5)){
-      stepElem = (<div>
-                  <h1>Enable version history?</h1>
-                  <Toggle
-                       label="Yes"
-                       style={toggleStyle}
-                       onToggle={this._handleHistoryChange.bind(this)}
-                     />
-                 </div>);
-    }
     if(this.state.step === this.state.steps) {
-      stepElem = (<div>
-                  <RaisedButton
-                    label="Create Layer"
+      let createAction = (<div>
+                  <FlatButton
+                    label={buttonLabel}
                     primary={true}
-                    onTouchTap={this._handleImport.bind(this)}
+                    disabled={this.state.importing}
+                    onClick={this._handleImport.bind(this)}
                     />
                  </div>);
+      actions.push(createAction);
     }
     return (
-      <Dialog open={this.state.show} title="Create Layer" onRequestClose={this._handleClose}>
-        <Wizard stepContent={this.stepContent} step={this.state.step} steps={this.state.steps} prev={this.prev.bind(this)} next={this.next.bind(this)}>{stepElem}</Wizard>
-      </Dialog>
+      <div className="import">
+        <RaisedButton primary={true} onClick={this._handleOpen.bind(this)} label={"Create Layer"}/>
+        <Dialog open={this.state.show} title="Create Layer" modal={false} onRequestClose={this._handleClose.bind(this)} actions={actions}>
+          <Wizard stepContent={this.stepContent} step={this.state.step} steps={this.state.steps} prev={this.prev.bind(this)} next={this.next.bind(this)}>{stepElem}</Wizard>
+        </Dialog>
+      </div>
     )
   }
 };

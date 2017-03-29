@@ -1,45 +1,47 @@
 import React from 'react';
 import RaisedButton from 'material-ui/RaisedButton';
 import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
+import CircularProgress from 'material-ui/CircularProgress';
 
 import {uploadedData} from '../services/geonode';
 import {uploadSuccess} from '../state/uploads/selectors';
 
-import LayerImport from './layerImport';
+import LayerImportLink from './layerImportLink';
 
 class UploadedLayer extends React.PureComponent {
   static propTypes = {
-    layer: React.PropTypes.object.isRequired
+    layer: React.PropTypes.object.isRequired,
+    id: React.PropTypes.number
   };
   constructor(props) {
     super(props);
-    this.state = {
-      import: false
-    }
   };
   _importStatus() {
     return this.props.layer.import_status || 'not imported'
   };
+  _isImporting() {
+    return (this._importStatus() !== 'not imported' && this._importStatus() !== 'SUCCESS');
+  }
   _name() {
     return this.props.layer.name || 'not available'
   };
-  _handleImport() {
-    this.setState({import: true});
-  };
   render() {
-    let singleLayerWizard = (<LayerImport show={this.state.import} layer={this.props.layer} />);
     let style = { padding: 5, margin: 10};
+    let avatar = undefined;
+    if(this._isImporting()) {
+      avatar = (<CircularProgress />)
+    }
     return (<div>
 						 <Card containerStyle={style}>
 								<CardHeader
 									title={this._name()}
 									subtitle={this._importStatus()}
+                  avatar={avatar}
 								/>
 								<CardActions>
-									<RaisedButton primary={true} onClick={this._handleImport.bind(this)} label={"Create Layer"}/>
+                  <LayerImportLink id={this.props.id} show={false} layer={this.props.layer} />
 								</CardActions>
               </Card>
-              {singleLayerWizard}
             </div>)
   }
 };
