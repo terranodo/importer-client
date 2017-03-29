@@ -75,7 +75,7 @@ export default class LayerImport extends React.PureComponent {
     }
     if(this.state.step === this.state.steps) {
       let createAction = (<div>
-                  <FlatButton
+                  <RaisedButton
                     label={buttonLabel}
                     primary={true}
                     disabled={this.state.importing}

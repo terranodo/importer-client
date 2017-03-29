@@ -11,7 +11,7 @@ build-js:
 	cd $(MKFILE_DIR)..; npm run build
 
 build-django-app: build-js
-	cp $(MKFILE_DIR)../dist/App.min.js $(MKFILE_DIR)osgeo_importer_client/static/osgeo_importer_client/js/osgeo_importer_client.min.js
+	cp $(MKFILE_DIR)../dist/Importer.min.js $(MKFILE_DIR)osgeo_importer_client/static/osgeo_importer_client/js/osgeo_importer_client.min.js
 
 package-app: build-django-app
 	cd $(MKFILE_DIR); python setup.py sdist bdist_wheel
