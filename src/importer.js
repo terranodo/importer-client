@@ -9,9 +9,6 @@ import configureStore from './configureStore';
 
 import {setServerUrl} from './state/server/actions';
 
-const store = configureStore();
-store.dispatch(setServerUrl('http://importer.terranodo.io/'));
-
 
 const muiTheme = getMuiTheme({
   palette: {
@@ -20,15 +17,27 @@ const muiTheme = getMuiTheme({
   }
 });
 
-const App = () => (
-  <MuiThemeProvider muiTheme={muiTheme}>
-		<Provider store={store}>
-			<ImporterLink/>
-		</Provider>
-  </MuiThemeProvider>
-);
+const store = configureStore();
 
-ReactDOM.render(
-  <App />,
-  document.getElementById('main')
-);
+class Importer {
+  constructor(domId, options) {
+    this._domId = domId;
+		this._server = options.server;
+  }
+	set server(value) {
+    this._server = value;
+  }
+  view() {
+		store.dispatch(setServerUrl(this._server));
+		ReactDOM.render(
+			<MuiThemeProvider muiTheme={muiTheme}>
+				<Provider store={store}>
+					<ImporterLink/>
+				</Provider>
+			</MuiThemeProvider>,
+			document.getElementById(this._domId)
+		);
+  }
+}
+
+module.exports = Importer;
