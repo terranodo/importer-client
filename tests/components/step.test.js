@@ -1,11 +1,13 @@
 import ReactTestUtils from 'react-addons-test-utils';
+import { shallow } from 'enzyme';
 
-import Step from '../../src/components/step';
+import { Step } from 'material-ui/Stepper';
+import Wizard from '../../src/components/step';
 
 
-describe('Step', () => {
+describe('Wizard', () => {
 	it('exists', () => {
-    const uploadComponent = ReactTestUtils.renderIntoDocument(<Step step={1}/>);
-    ReactTestUtils.isCompositeComponent(uploadComponent).should.be.true;
+    const wrapper = shallow(<Wizard step={1}/>);
+    expect(wrapper.find(Step)).to.have.length(3);
 	});
 });

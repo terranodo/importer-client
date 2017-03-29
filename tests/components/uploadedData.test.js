@@ -6,7 +6,7 @@ chai.use(tdChai(td));
 
 import UploadedData from '../../src/components/uploadedData';
 import UploadedLayer from '../../src/components/uploadedLayer';
-
+import RaisedButton from 'material-ui/RaisedButton';
 
 describe('UploadedData', () => {
 	it('renders one <UploadedLayer /> component', () => {
@@ -18,7 +18,7 @@ describe('UploadedData', () => {
     const data = { layers: [{name: 'Test'}] };
     let importAll = td.function();
     const wrapper = shallow(<UploadedData importAll={importAll} data={data}/>);
-    wrapper.find('button').simulate('click');
+    wrapper.find(RaisedButton).simulate('click');
     expect(importAll).to.have.been.called;
 	});
 });
