@@ -12,8 +12,7 @@ import {setServerUrl} from './state/server/actions';
 
 const muiTheme = getMuiTheme({
   palette: {
-    primary1Color: "#eb6b00",
-    primary2Color: "#eb6b00",
+    accent1Color: "#eb6b00"
   }
 });
 
