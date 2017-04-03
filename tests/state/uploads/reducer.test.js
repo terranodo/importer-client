@@ -54,9 +54,9 @@ describe('uploads', () => {
   });
   describe('IMPORT_ALL_SUCCESS', () => {
     it('sets the returned uploaded file data', () => {
-      let result = { id: 1, status: "UPLOADED" };
+      let result = { layer_count: 1};
       let action = { type: IMPORT_ALL_SUCCESS, result};
-      let state = Object.assign({}, defaultState, {importLayers: { started: false}});
+      let state = Object.assign({}, defaultState, {importLayers: { started: true, layerCount: 1}});
       assert.deepEqual(uploads(undefined, action),state);
     });
   });

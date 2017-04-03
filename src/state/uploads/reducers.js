@@ -38,7 +38,7 @@ const uploads = (state = defaultState, action) => {
       })
     case IMPORT_ALL_SUCCESS:
       return Object.assign({}, state, {
-        importLayers: { started: false }
+        importLayers: { started: true, layerCount: action.result.layer_count}
       })
     case IMPORT_ALL_STARTED:
       return Object.assign({}, state, {

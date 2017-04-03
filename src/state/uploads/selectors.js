@@ -24,8 +24,8 @@ export function importStarted(state) {
   return state.uploads.importLayers.started;
 }
 export function singleImportStarted(state, index) {
-  return (state.uploads.importLayers.single[index] && state.uploads.importLayers.single[index].started) ? true : false;
+  return (state.uploads.importLayers.single && state.uploads.importLayers.single[index] && state.uploads.importLayers.single[index].started) ? true : false;
 }
 export function isLayerImported(state, index) {
-  return (state.uploads.importLayers.single[index] && state.uploads.importLayers.single[index].success) ? true : false;
+  return (state.uploads.importLayers.single && state.uploads.importLayers.single[index] && state.uploads.importLayers.single[index].success) ? true : false;
 }
