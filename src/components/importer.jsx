@@ -5,7 +5,7 @@ global.ReactDOM = ReactDOM;
 
 import UploaderLink from './uploadLink';
 import UploadedDataLink from './uploadedDataLink';
-import {uploadSuccess, uploadId, uploadData, getUploadData, importStarted} from '../state/uploads/selectors';
+import {uploadSuccess, uploadId, uploadData, getUploadData, importStarted, isCurrentlyImporting} from '../state/uploads/selectors';
 import Wizard from './step';
 
 class Importer extends React.Component {
@@ -22,7 +22,7 @@ class Importer extends React.Component {
     if(uploadSuccess(nextProps) && !uploadData(nextProps)) {
       this.props.getUploadedFiles();
     }
-    if(importStarted(nextProps)) {
+    if(importStarted(nextProps) && isCurrentlyImporting(nextProps)) {
       this.startPoll();
     }
     if(uploadData(nextProps)) {

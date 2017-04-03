@@ -1,4 +1,4 @@
-import {uploadSuccess, uploadData, getUploadData, uploadId, isLayerImported, singleImportStarted} from '../../../src/state/uploads/selectors'
+import {uploadSuccess, uploadData, getUploadData, uploadId, isLayerImported, singleImportStarted, isCurrentlyImporting} from '../../../src/state/uploads/selectors'
 
 describe('#uploadSuccess', () => {
   describe('status is success', () => {
@@ -57,4 +57,18 @@ describe('#singleImportStarted', () => {
       assert.equal(singleImportStarted({uploads: { importLayers: { single: { }}}},1),false);
     });
   })
+});
+describe('#isCurrentlyImporting', () => {
+  describe('import not complete', () => {
+    it('returns true', () => {
+      let layers = [{import_status: "PENDING"}, {import_status: null}];
+      assert.equal(isCurrentlyImporting({uploads: { data: { layers: layers }}}),true);
+    });
+  });
+  describe('import complete', () => {
+    it('returns false', () => {
+      let layers = [{import_status: "SUCCESS"}, {import_status: "FAILED"}];
+      assert.equal(isCurrentlyImporting({uploads: { data: { layers: layers }}}),false);
+    });
+  });
 });

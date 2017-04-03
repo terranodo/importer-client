@@ -10,6 +10,13 @@ export function uploadData(state) {
 export function getUploadData(state) {
   return state.uploads.data;
 }
+export function isCurrentlyImporting(state) {
+  if(state.uploads.data) {
+    let layerStatus = state.uploads.data.layers.map(elem => elem.import_status);
+    return layerStatus.filter((elem, index, arr) => elem === "PENDING" || elem === null).length > 1
+  }
+  return true;
+}
 export function uploadId(state) {
   return state.uploads.id;
 }
