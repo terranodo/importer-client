@@ -17,6 +17,15 @@ const createRequestObjectWithBody = function(method, body) {
   request.body = body;
   return request;
 }
+const hasTrailingSlash = (str) => {
+  return (/.*\/$/).test(str);
+};
+const removeTrailingSlash = (str) => {
+  return hasTrailingSlash(str) ? str.slice(0, -1) : str;
+};
+const checkServerUrl = function(url) {
+  return removeTrailingSlash(url);
+}
 const createSimpleRequestObject = function(method) {
   return {
       method: method,
@@ -37,7 +46,7 @@ export const uploadFiles = (server, files) => {
     data.append('file', file);
   });
 	var request = createRequestObjectWithBody('POST', data);
-  var requestPath = server + '/uploads/new/json';
+  var requestPath = checkServerUrl(server) + '/uploads/new/json';
   return fetch(requestPath,request)
     .then((response) => response.json())
     .catch((ex) => Promise.reject(ex));
@@ -45,28 +54,28 @@ export const uploadFiles = (server, files) => {
 
 export const importAll = (server, id) => {
 	var request = createRequestObject('GET');
-  var requestPath = `${server}/importer-api/data/${id}/import_all_layers/`;
+  var requestPath = `${checkServerUrl(server)}/importer-api/data/${id}/import_all_layers/`;
   return fetch(requestPath,request)
     .then((response) => response.json())
     .catch((ex) => Promise.reject(ex));
 };
 export const configure = (server, id, config) => {
 	var request = createRequestObject('POST', JSON.stringify(config));
-  var requestPath = `${server}/importer-api/data-layers/${id}/configure/`;
+  var requestPath = `${checkServerUrl(server)}/importer-api/data-layers/${id}/configure/`;
   return fetch(requestPath,request)
     .then((response) => response.json())
     .catch((ex) => Promise.reject(ex));
 };
 export const allUploadedData = (server) => {
 	var request = createRequestObject('GET');
-  var requestPath = `${server}/importer-api/data/`;
+  var requestPath = `${checkServerUrl(server)}/importer-api/data/`;
   return fetch(requestPath,request)
     .then((response) => response.json())
     .catch((ex) => Promise.reject(ex));
 };
 export const uploadedData = (server, id) => {
 	var request = createRequestObject('GET');
-  var requestPath = `${server}/importer-api/data/${id}/`;
+  var requestPath = `${checkServerUrl(server)}/importer-api/data/${id}/`;
   return fetch(requestPath,request)
     .then((response) => response.json())
     .catch((ex) => Promise.reject(ex));
