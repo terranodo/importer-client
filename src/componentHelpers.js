@@ -1,5 +1,6 @@
 import React from 'react';
 import TextField from 'material-ui/TextField';
+import SelectField from 'material-ui/SelectField';
 
 export const textFieldForKey = (keyName, value, changeCallback) => {
   return (<TextField
@@ -7,4 +8,12 @@ export const textFieldForKey = (keyName, value, changeCallback) => {
     value={value}
     onChange={(event, newValue) => { changeCallback(keyName, newValue)}}/>
   )
+}
+export const selectFieldForKey = (keyName, items, value, changeCallback) => {
+  return (<SelectField
+    onChange={(event, index, newValue) => { changeCallback(keyName, newValue)}}
+    value={value}
+    >
+      {items}
+    </SelectField>);
 }

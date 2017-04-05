@@ -6,7 +6,11 @@ import Toggle from 'material-ui/Toggle';
 import Wizard from './step';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
-import {textFieldForKey} from '../componentHelpers.js'
+import {textFieldForKey, selectFieldForKey} from '../componentHelpers.js'
+import MenuItem from 'material-ui/MenuItem';
+
+import injectTapEventPlugin from 'react-tap-event-plugin';
+injectTapEventPlugin();
 
 import {isLayerImported, singleImportStarted} from '../state/uploads/selectors';
 
@@ -29,6 +33,7 @@ export default class LayerImport extends React.PureComponent {
     }
     let configArray = this.generateConfigArray(config)
     this.stepContent = this.generateStepContent(configArray);
+    this.apiItems = Object.keys(props.layer);
     this.state= {
       show: false,
       step: 1,
@@ -54,11 +59,17 @@ export default class LayerImport extends React.PureComponent {
       configArray.push({title: 'Layer Name', api_name: 'layerName', type: 'text'});
     }
     if(config.edit_time) {
-      configArray.push({title: 'Time', api_name: 'time', type: 'date'});
+      configArray.push({title: 'Start Date', api_name: 'start_date', type: 'fields'});
+      configArray.push({title: 'End Date', api_name: 'end_date', type: 'fields'});
     }
     if(config.edit_permission) {
     }
     return configArray.concat(config.other);
+  }
+  generateApiItems(layer) {
+    return configArray.map( (d, index) => {
+      return {title: d.title, value: d.api_name };
+    });
   }
   generateStepContent(configArray) {
     let stepContent = [];
@@ -97,6 +108,15 @@ export default class LayerImport extends React.PureComponent {
     this.props.configureLayerWithName(this.state.layerName, this.props.id);
     this.setState({importing: true});
   }
+  menuItems(items) {
+    return items.map((item, index) => (
+      <MenuItem
+        key={index}
+        value={item}
+        primaryText={item}
+      />
+    ));
+  }
   render() {
     let stepElem;
     let toggleStyle = { margin: 10 }
@@ -121,6 +141,8 @@ export default class LayerImport extends React.PureComponent {
       let field;
       if(type === "text") {
         field = textFieldForKey(api_name, this.state[api_name], this._handleInputChange.bind(this))
+      }else if(type === "fields") {
+        field = selectFieldForKey(api_name, this.menuItems(this.apiItems), this.state[api_name], this._handleInputChange.bind(this));
       }
       const className = `step-${this.state.step}`
       stepElem = (<div className={className}>
