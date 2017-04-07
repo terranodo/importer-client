@@ -6,7 +6,8 @@ import Toggle from 'material-ui/Toggle';
 import Wizard from './step';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
-import {textFieldForKey, selectFieldForKey} from '../componentHelpers.js'
+import {textFieldForKey, selectFieldForKey} from '../componentHelpers'
+import {generateConfigArray, generateTitleArray, createLayerConfigFromConfigArray} from '../services/config'
 import MenuItem from 'material-ui/MenuItem';
 
 import injectTapEventPlugin from 'react-tap-event-plugin';
@@ -17,22 +18,15 @@ import {isLayerImported, singleImportStarted} from '../state/uploads/selectors';
 export default class LayerImport extends React.PureComponent {
   static propTypes = {
     layer: React.PropTypes.object.isRequired,
+    config: React.PropTypes.object.isRequired,
     show: React.PropTypes.bool,
     id: React.PropTypes.number
   };
   constructor(props) {
     super(props);
-    let config = {
-      edit_name: true,
-      edit_time: false,
-      other: [{
-        title: 'GeoGig',
-        api_name: 'geogig',
-        type: 'text'
-      }]
-    }
-    let configArray = this.generateConfigArray(config)
-    this.stepContent = this.generateStepContent(configArray);
+    let configArray = generateConfigArray(props.config)
+    this.stepContent = generateTitleArray(configArray);
+    this.stepContent.push("Import");
     this.apiItems = Object.keys(props.layer);
     this.state= {
       show: false,
@@ -53,31 +47,10 @@ export default class LayerImport extends React.PureComponent {
     }
     this.setState({importing: singleImportStarted(nextProps, nextProps.id) });
   }
-  generateConfigArray(config) {
-    let configArray = [];
-    if(config.edit_name) {
-      configArray.push({title: 'Layer Name', api_name: 'layerName', type: 'text'});
-    }
-    if(config.edit_time) {
-      configArray.push({title: 'Start Date', api_name: 'start_date', type: 'fields'});
-      configArray.push({title: 'End Date', api_name: 'end_date', type: 'fields'});
-    }
-    if(config.edit_permission) {
-    }
-    return configArray.concat(config.other);
-  }
   generateApiItems(layer) {
     return configArray.map( (d, index) => {
       return {title: d.title, value: d.api_name };
     });
-  }
-  generateStepContent(configArray) {
-    let stepContent = [];
-    stepContent = configArray.map( (d, index) => {
-      return d.title;
-    })
-    stepContent.push("Import");
-    return stepContent;
   }
   next() {
     this.setState({
@@ -105,7 +78,7 @@ export default class LayerImport extends React.PureComponent {
     this.setState({layerName: newValue});
   }
   _handleImport() {
-    this.props.configureLayerWithName(this.state.layerName, this.props.id);
+    this.props.configureLayerWithConfig(createLayerConfigFromConfigArray(this.state.config, this.state), this.props.id);
     this.setState({importing: true});
   }
   menuItems(items) {
@@ -127,6 +100,7 @@ export default class LayerImport extends React.PureComponent {
     if(this.state.step === this.state.steps) {
       let createAction = (<div>
                   <RaisedButton
+                    className='import-btn'
                     label={buttonLabel}
                     primary={true}
                     disabled={this.state.importing}
