@@ -24,21 +24,21 @@ export default class LayerImport extends React.PureComponent {
   };
   constructor(props) {
     super(props);
-    let configArray = generateConfigArray(props.config)
-    this.stepContent = generateTitleArray(configArray);
-    this.stepContent.push("Import");
     this.apiItems = Object.keys(props.layer);
+    this.stepContent = Object.keys(props.config.steps).map((d, i) => { return props.config.steps[d].title; });
+    this.stepContent.push("Import");
     this.state= {
       show: false,
       step: 1,
       steps: this.stepContent.length,
       importing: false,
-      layerName: props.layer.name,
-      config: configArray
+      layerName: props.layer.name
     }
-    configArray.forEach( (d) => {
-      this.state[d.api_name] = props.layer[d.api_name];
-    })
+    Object.keys(props.config.steps).map((d, i) => {
+      props.config.steps[d].steps.forEach( (d) => {
+        this.state[d.api_name] = props.layer[d.api_name];
+      });
+    });
   };
   componentWillReceiveProps(nextProps) {
     if(isLayerImported(nextProps, nextProps.id)) {
@@ -78,7 +78,7 @@ export default class LayerImport extends React.PureComponent {
     this.setState({layerName: newValue});
   }
   _handleImport() {
-    this.props.configureLayerWithConfig(createLayerConfigFromConfigArray(this.state.config, this.state), this.props.id);
+    this.props.configureLayerWithConfig(createLayerConfigFromConfigArray(this.props.config, this.state), this.props.id);
     this.setState({importing: true});
   }
   menuItems(items) {
@@ -98,6 +98,7 @@ export default class LayerImport extends React.PureComponent {
     let defaultAction = (<FlatButton primary={false} onClick={this._handleClose.bind(this)} label={"Cancel"}/>)
     actions.push(defaultAction);
     if(this.state.step === this.state.steps) {
+      let headline = (<h1>Import Layer</h1>)
       let createAction = (<div>
                   <RaisedButton
                     className='import-btn'
@@ -110,18 +111,23 @@ export default class LayerImport extends React.PureComponent {
       actions.push(createAction);
     }else {
       let {layer} = this.props;
-      let {title, api_name, type}= this.state.config[this.state.step-1];
+      let {title, steps}= this.props.config.steps[this.state.step];
       let headline = (<h1>{title}</h1>)
-      let field;
-      if(type === "text") {
-        field = textFieldForKey(api_name, this.state[api_name], this._handleInputChange.bind(this))
-      }else if(type === "fields") {
-        field = selectFieldForKey(api_name, this.menuItems(this.apiItems), this.state[api_name], this._handleInputChange.bind(this));
-      }
+      let fields = steps.map( (d, i) => {
+        let {subtitle, api_name, type} = d;
+        let field;
+        if(type === "text") {
+          field = textFieldForKey(api_name, this.state[api_name], this._handleInputChange.bind(this))
+        }else if(type === "fields") {
+          field = selectFieldForKey(api_name, this.menuItems(this.apiItems), this.state[api_name], this._handleInputChange.bind(this));
+        }
+        const elem = (<div key={i}>{field}<br/></div>);
+        return elem;
+      });
       const className = `step-${this.state.step}`
       stepElem = (<div className={className}>
                   {headline}
-                  {field}
+                  {fields}
                   </div>
                  );
     }

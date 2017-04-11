@@ -1,9 +1,14 @@
 
 export const getDefaultConfig = () => {
   return {
-    edit_name: true,
-    edit_time: false,
-    other: []
+    steps: {
+      1: {
+        title: 'Layer Name',
+        steps: [
+          { title: '', api_name: 'layer_name', type: 'text'}
+        ]
+      }
+    }
   }
 }
 export const generateConfigArray = (config) => {
@@ -30,10 +35,12 @@ export const generateTitleArray = (config) => {
 export const createLayerConfigWithName = (name) => {
   return { index: 0, permissions: {'users':{'AnonymousUser':['change_layer_data', 'download_resourcebase', 'view_resourcebase']}}, configureTime: false, convert_to_date: [], editable: true, start_date: null, end_date: null, layer_name: name}
 }
-export const createLayerConfigFromConfigArray = (configArray, values) => {
+export const createLayerConfigFromConfigArray = (config, values) => {
   let defaultConfig = { index: 0, permissions: {'users':{'AnonymousUser':['change_layer_data', 'download_resourcebase', 'view_resourcebase']}}, configureTime: false, convert_to_date: [], editable: true, start_date: null, end_date: null, layer_name: null};
-  configArray.forEach( (d) => {
-    defaultConfig[d.api_name] = values[d.api_name];
-  })
+  Object.keys(config.steps).map((d, i) => {
+    config.steps[d].steps.forEach( (d) => {
+      defaultConfig[d.api_name] = values[d.api_name];
+    });
+  });
   return defaultConfig;
 }
