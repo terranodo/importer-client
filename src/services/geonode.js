@@ -67,3 +67,18 @@ export const uploadedData = (server, id) => {
     .then((response) => response.json())
     .catch((ex) => Promise.reject(ex));
 };
+
+export const getUsers = (server, query) => {
+	var request = createRequestObject('POST', JSON.stringify(query));
+  var requestPath = `${server}/account/ajax_lookup`;
+  return fetch(requestPath,request)
+    .then((response) => response.json())
+    .catch((ex) => Promise.reject(ex));
+};
+export const genericPost = (server, endpoint, query) => {
+	var request = createRequestObject('POST', JSON.stringify(query));
+  var requestPath = `${server}/${endpoint}`;
+  return fetch(requestPath,request)
+    .then((response) => response.json())
+    .catch((ex) => Promise.reject(ex));
+};
