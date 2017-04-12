@@ -35,7 +35,7 @@ export default class LayerImport extends React.PureComponent {
       layerName: props.layer.name
     }
     Object.keys(props.config.steps).map((d, i) => {
-      props.config.steps[d].steps.forEach( (d) => {
+      props.config.steps[d].fields.forEach( (d) => {
         this.state[d.api_name] = props.layer[d.api_name];
       });
     });
@@ -111,15 +111,15 @@ export default class LayerImport extends React.PureComponent {
       actions.push(createAction);
     }else {
       let {layer} = this.props;
-      let {title, steps}= this.props.config.steps[this.state.step];
+      let {title, fields}= this.props.config.steps[this.state.step];
       let headline = (<h1>{title}</h1>)
-      let fields = steps.map( (d, i) => {
+      let fieldItems = fields.map( (d, i) => {
         let {subtitle, api_name, type} = d;
         let field;
         if(type === "text") {
-          field = textFieldForKey(api_name, this.state[api_name], this._handleInputChange.bind(this))
+          field = textFieldForKey(api_name, this.state[api_name], this._handleInputChange.bind(this), subtitle)
         }else if(type === "fields") {
-          field = selectFieldForKey(api_name, this.menuItems(this.apiItems), this.state[api_name], this._handleInputChange.bind(this));
+          field = selectFieldForKey(api_name, this.menuItems(this.apiItems), this.state[api_name], this._handleInputChange.bind(this), subtitle);
         }
         const elem = (<div key={i}>{field}<br/></div>);
         return elem;
@@ -127,7 +127,7 @@ export default class LayerImport extends React.PureComponent {
       const className = `step-${this.state.step}`
       stepElem = (<div className={className}>
                   {headline}
-                  {fields}
+                  {fieldItems}
                   </div>
                  );
     }

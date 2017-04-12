@@ -18,7 +18,7 @@ describe('LayerImport', () => {
   beforeEach(() => {
     layerName = {
           title: 'Layer Name',
-          steps: [
+          fields: [
             { title: '', api_name: 'layer_name', type: 'text'}
           ]
         };
@@ -49,9 +49,10 @@ describe('LayerImport', () => {
     expect(wrapper.state('layer_name')).to.equal('Test');
 	});
   it('shows select field correctly', () => {
-    let date = { title: 'Dates', steps: [
+    let date = { title: 'Dates', fields: [
       {title: 'Start Date', api_name: 'start_date', type: 'fields'},
-      {title: 'End Date', api_name: 'end_date', type: 'fields'}
+      {title: 'End Date', api_name: 'end_date', type: 'fields'},
+      {title: '', api_name: 'configureTime', type: 'hidden', value: true}
     ]};
     const config = Object.assign({}, defaultConfig, {steps: {1: layerName, 2: date }});
     const layer = { layerName: 'Test', import_status: ''};
