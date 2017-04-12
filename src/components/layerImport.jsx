@@ -6,25 +6,39 @@ import Toggle from 'material-ui/Toggle';
 import Wizard from './step';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
+import {textFieldForKey, selectFieldForKey} from '../componentHelpers'
+import {generateConfigArray, generateTitleArray, createLayerConfigFromConfigArray} from '../services/config'
+import MenuItem from 'material-ui/MenuItem';
+
+import injectTapEventPlugin from 'react-tap-event-plugin';
+injectTapEventPlugin();
 
 import {isLayerImported, singleImportStarted} from '../state/uploads/selectors';
 
 export default class LayerImport extends React.PureComponent {
   static propTypes = {
     layer: React.PropTypes.object.isRequired,
+    config: React.PropTypes.object.isRequired,
     show: React.PropTypes.bool,
     id: React.PropTypes.number
   };
   constructor(props) {
     super(props);
+    this.apiItems = Object.keys(props.layer);
+    this.stepContent = Object.keys(props.config.steps).map((d, i) => { return props.config.steps[d].title; });
+    this.stepContent.push("Import");
     this.state= {
       show: false,
       step: 1,
-      steps: 2,
+      steps: this.stepContent.length,
       importing: false,
       layerName: props.layer.name
     }
-    this.stepContent = ["Name", "Import"];
+    Object.keys(props.config.steps).map((d, i) => {
+      props.config.steps[d].fields.forEach( (d) => {
+        this.state[d.api_name] = props.layer[d.api_name];
+      });
+    });
   };
   componentWillReceiveProps(nextProps) {
     if(isLayerImported(nextProps, nextProps.id)) {
@@ -32,6 +46,11 @@ export default class LayerImport extends React.PureComponent {
       this.setState({step: 1, layerName: nextProps.layer.name});
     }
     this.setState({importing: singleImportStarted(nextProps, nextProps.id) });
+  }
+  generateApiItems(layer) {
+    return configArray.map( (d, index) => {
+      return {title: d.title, value: d.api_name };
+    });
   }
   next() {
     this.setState({
@@ -50,12 +69,26 @@ export default class LayerImport extends React.PureComponent {
   _handleOpen() {
     this.setState({show: true});
   }
+  _handleInputChange(keyValue, newValue) {
+    let state = {};
+    state[keyValue] = newValue;
+    this.setState(state);
+  }
   _handleNameChange(event, newValue) {
     this.setState({layerName: newValue});
   }
   _handleImport() {
-    this.props.configureLayerWithName(this.state.layerName, this.props.id);
+    this.props.configureLayerWithConfig(createLayerConfigFromConfigArray(this.props.config, this.state), this.props.id);
     this.setState({importing: true});
+  }
+  menuItems(items) {
+    return items.map((item, index) => (
+      <MenuItem
+        key={index}
+        value={item}
+        primaryText={item}
+      />
+    ));
   }
   render() {
     let stepElem;
@@ -64,18 +97,11 @@ export default class LayerImport extends React.PureComponent {
     let actions = []
     let defaultAction = (<FlatButton primary={false} onClick={this._handleClose.bind(this)} label={"Cancel"}/>)
     actions.push(defaultAction);
-    if(this.state.step === 1) {
-      stepElem = (<div>
-                    <h1>Layer Name</h1>
-                    <TextField
-                      name="layername"
-                      defaultValue={this.state.layerName}
-                      onChange={this._handleNameChange.bind(this)}/>
-                  </div>);
-    }
     if(this.state.step === this.state.steps) {
+      let headline = (<h1>Import Layer</h1>)
       let createAction = (<div>
                   <RaisedButton
+                    className='import-btn'
                     label={buttonLabel}
                     primary={true}
                     disabled={this.state.importing}
@@ -83,6 +109,27 @@ export default class LayerImport extends React.PureComponent {
                     />
                  </div>);
       actions.push(createAction);
+    }else {
+      let {layer} = this.props;
+      let {title, fields}= this.props.config.steps[this.state.step];
+      let headline = (<h1>{title}</h1>)
+      let fieldItems = fields.map( (d, i) => {
+        let {subtitle, api_name, type} = d;
+        let field;
+        if(type === "text") {
+          field = textFieldForKey(api_name, this.state[api_name], this._handleInputChange.bind(this), subtitle)
+        }else if(type === "fields") {
+          field = selectFieldForKey(api_name, this.menuItems(this.apiItems), this.state[api_name], this._handleInputChange.bind(this), subtitle);
+        }
+        const elem = (<div key={i}>{field}<br/></div>);
+        return elem;
+      });
+      const className = `step-${this.state.step}`
+      stepElem = (<div className={className}>
+                  {headline}
+                  {fieldItems}
+                  </div>
+                 );
     }
     return (
       <div className="import">

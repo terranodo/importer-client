@@ -1,6 +1,6 @@
 import fetchMock from 'fetch-mock';
 
-import {uploadFiles, configure, importAll, allUploadedData, uploadedData} from '../../src/services/geonode';
+import {uploadFiles, configure, importAll, allUploadedData, uploadedData, getUsers, genericPost} from '../../src/services/geonode';
 
 describe('uploadFile', () => {
   beforeEach(function() {
@@ -109,6 +109,62 @@ describe('#uploadedData', () => {
     });
     it('returns result', () => {
       return assert.becomes(uploadedData(server, id), data);
+    });
+  });
+});
+describe('#genericPost', () => {
+  beforeEach(function() {
+		document.cookie = "csrftoken=1;";
+  });
+  let server = 'http://52.37.73.154';
+  let data = {
+    query: 'username'
+  };
+  let result = {
+    count: 1,
+    users: [
+      { username: "admin" }
+    ],
+    groups: []
+  }
+  describe('success', () => {
+    beforeEach(() => {
+      fetchMock
+      .post('http://52.37.73.154/account/ajax_lookup', result);
+    });
+    afterEach(() => {
+      fetchMock.restore();
+    });
+    it('returns user result', () => {
+      return assert.becomes(genericPost(server, 'account/ajax_lookup', data), result);
+    });
+  });
+});
+describe('#getUsers', () => {
+  beforeEach(function() {
+		document.cookie = "csrftoken=1;";
+  });
+  let server = 'http://52.37.73.154';
+  let data = {
+    query: 'username'
+  };
+  let result = {
+    count: 1,
+    users: [
+      { username: "admin" }
+    ],
+    groups: []
+  }
+  describe('success', () => {
+    beforeEach(() => {
+      fetchMock
+      .post('http://52.37.73.154/account/ajax_lookup', result);
+    });
+    afterEach(() => {
+      fetchMock.restore();
+    });
+    it('returns user result', () => {
+      return assert.becomes(getUsers(server, data), result);
     });
   });
 });

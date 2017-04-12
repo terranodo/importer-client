@@ -27,10 +27,6 @@ const createSimpleRequestObject = function(method) {
     };
 };
 
-export const createLayerConfigWithName = (name) => {
-  return { index: 0, permissions: {'users':{'AnonymousUser':['change_layer_data', 'download_resourcebase', 'view_resourcebase']}}, configureTime: false, convert_to_date: [], editable: true, start_date: null, end_date: null, layer_name: name}
-}
-
 export const uploadFiles = (server, files) => {
 	var data = new FormData();
   files.forEach((file)=> {
@@ -67,6 +63,21 @@ export const allUploadedData = (server) => {
 export const uploadedData = (server, id) => {
 	var request = createRequestObject('GET');
   var requestPath = `${server}/importer-api/data/${id}/`;
+  return fetch(requestPath,request)
+    .then((response) => response.json())
+    .catch((ex) => Promise.reject(ex));
+};
+
+export const getUsers = (server, query) => {
+	var request = createRequestObject('POST', JSON.stringify(query));
+  var requestPath = `${server}/account/ajax_lookup`;
+  return fetch(requestPath,request)
+    .then((response) => response.json())
+    .catch((ex) => Promise.reject(ex));
+};
+export const genericPost = (server, endpoint, query) => {
+	var request = createRequestObject('POST', JSON.stringify(query));
+  var requestPath = `${server}/${endpoint}`;
   return fetch(requestPath,request)
     .then((response) => response.json())
     .catch((ex) => Promise.reject(ex));
