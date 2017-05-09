@@ -1,19 +1,33 @@
+import configDefaults from '../config/defaults'
+
 let getClass = {}.toString,
     hasProperty = {}.hasOwnProperty;
 function isFunction(object) {
  return object && getClass.call(object) == '[object Function]';
 }
 export const getDefaultConfig = () => {
-  return {
-    steps: {
-      1: {
-        title: 'Layer Name',
-        fields: [
-          { title: '', api_name: 'layer_name', type: 'text'}
-        ]
-      }
+  return ["layerName"];
+}
+export const convertConfigToSteps = (config, layer, options = {}) => {
+  let steps = [];
+  config.forEach((c) => {
+    let step;
+    if(configDefaults[c]) {
+      step = configDefaults[c]();
+    }else {
+      step = c();
     }
-  }
+    step(layer, options);
+    steps.push(step);
+  })
+  return steps;
+}
+export const importLayerConfig = (config, values) => {
+  let minimalConfig = { index: 0, permissions: {'users':{'AnonymousUser':['change_layer_data', 'download_resourcebase', 'view_resourcebase']}}, configureTime: false, convert_to_date: [], editable: true, start_date: null, end_date: null, layerName: ''}
+  config.forEach((value) => {
+    minimalConfig = Object.assign(minimalConfig, value.convert(values))
+  });
+  return minimalConfig;
 }
 export const createLayerConfigWithName = (name) => {
   return { index: 0, permissions: {'users':{'AnonymousUser':['change_layer_data', 'download_resourcebase', 'view_resourcebase']}}, configureTime: false, convert_to_date: [], editable: true, start_date: null, end_date: null, layer_name: name}

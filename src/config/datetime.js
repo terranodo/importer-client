@@ -1,12 +1,14 @@
 export default function dateTime() {
-  var title = 'Time';
-  var steps = function() {
+  var layer, options, valuePromise,
+  title = 'Time';
+  var steps = function(layer, options) {
+    valuePromise = Promise.resolve(Object.keys(layer));
   }
   steps.fields = function() {
     return [{
       name: 'start_date',
       type: 'select',
-      values: []
+      values: valuePromise
     }]
   }
   steps.convert = function(values) {
