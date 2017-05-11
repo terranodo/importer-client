@@ -48,7 +48,6 @@ describe('configure', () => {
     const store = mockStore({server: { url: ''}, uploads: { id: 1 }});
     const expectedAction = [{type: IMPORT_STARTED, index: 1}, {type: CONFIGURE_SUCCESS, index: 1, result: result}];
     return store.dispatch(configureUploads({},1)).then( () => {
-      console.log(store.getActions())
       assert.deepEqual(store.getActions(), expectedAction);
     });
   });

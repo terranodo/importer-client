@@ -44,7 +44,7 @@ describe('functional config', () => {
         step(layer, option);
       });
       it('returns fields with a value promise', () => {
-        let result = [{name: 'start_date', type: 'select', values: Promise.resolve(['layerName'])}];
+        let result = [{name: 'start_date', type: 'select', values: Promise.resolve(['layerName']), subtitle: 'Start Date'}, {name: 'end_date', type: 'select', values: Promise.resolve(['layerName']), subtitle: 'End Date'}];
         assert.deepEqual(step.fields(), result);
       });
       it('returns fields with the default value for start_date', () => {

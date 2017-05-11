@@ -4,6 +4,9 @@ var layerName = function() {
   var steps = function(layer, options) {
     valuePromise = Promise.resolve(layer.layerName);
   };
+  steps.title = function() {
+    return title;
+  };
   steps.fields = function() {
     return [{
       name: 'layerName',

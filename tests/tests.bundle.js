@@ -1,6 +1,7 @@
 var context = require.context('.', true, /.+\.test\.jsx?$/);
 context.keys().forEach(context);
 module.exports = context;
+import "babel-polyfill";
 import {assert} from 'chai';
 import td from 'testdouble';
 var chaiAsPromised = require("chai-as-promised");

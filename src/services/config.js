@@ -11,14 +11,14 @@ export const getDefaultConfig = () => {
 export const convertConfigToSteps = (config, layer, options = {}) => {
   let steps = [];
   config.forEach((c) => {
-    let step;
+    let stepObj;
     if(configDefaults[c]) {
-      step = configDefaults[c]();
+      stepObj = configDefaults[c]();
     }else {
-      step = c();
+      stepObj = c();
     }
-    step(layer, options);
-    steps.push(step);
+    stepObj(layer, options);
+    steps.push(stepObj);
   })
   return steps;
 }

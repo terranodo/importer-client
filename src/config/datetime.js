@@ -4,11 +4,21 @@ export default function dateTime() {
   var steps = function(layer, options) {
     valuePromise = Promise.resolve(Object.keys(layer));
   }
+  steps.title = function() {
+    return title;
+  };
   steps.fields = function() {
     return [{
       name: 'start_date',
       type: 'select',
-      values: valuePromise
+      values: valuePromise,
+      subtitle: 'Start Date'
+    },
+    {
+      name: 'end_date',
+      type: 'select',
+      values: valuePromise,
+      subtitle: 'End Date'
     }]
   }
   steps.convert = function(values) {

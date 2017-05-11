@@ -14,29 +14,32 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 injectTapEventPlugin();
 
 import {isLayerImported, singleImportStarted} from '../state/uploads/selectors';
+import {convertConfigToSteps, importLayerConfig} from '../services/config';
+import Select from './fields/select';
 
 export default class LayerImport extends React.PureComponent {
   static propTypes = {
     layer: React.PropTypes.object.isRequired,
-    config: React.PropTypes.object.isRequired,
+    config: React.PropTypes.array.isRequired,
     show: React.PropTypes.bool,
     id: React.PropTypes.number
   };
   constructor(props) {
     super(props);
     this.apiItems = Object.keys(props.layer);
-    this.stepContent = Object.keys(props.config.steps).map((d, i) => { return props.config.steps[d].title; });
-    this.stepContent.push("Import");
+    this.stepContent = convertConfigToSteps(props.config, props.layer);
+    this.stepTitles = this.stepContent.map( (d) => { return d.title()})
+    this.stepTitles.push("Import");
     this.state= {
       show: false,
       step: 1,
-      steps: this.stepContent.length,
+      steps: this.stepTitles.length,
       importing: false,
       layerName: props.layer.name
     }
-    Object.keys(props.config.steps).map((d, i) => {
-      props.config.steps[d].fields.forEach( (d) => {
-        this.state[d.api_name] = props.layer[d.api_name];
+    this.stepContent.forEach((d, i) => {
+      d.fields().forEach( (d) => {
+        this.state[d.name] = props.layer[d.name];
       });
     });
   };
@@ -78,7 +81,12 @@ export default class LayerImport extends React.PureComponent {
     this.setState({layerName: newValue});
   }
   _handleImport() {
-    this.props.configureLayerWithConfig(createLayerConfigFromConfigArray(this.props.config, this.state), this.props.id);
+    let values = Object.assign({},this.state);
+    delete values.steps;
+    delete values.step;
+    delete values.importing;
+    delete values.show;
+    this.props.configureLayerWithConfig(importLayerConfig(this.stepContent, values), this.props.id);
     this.setState({importing: true});
   }
   menuItems(items) {
@@ -111,15 +119,20 @@ export default class LayerImport extends React.PureComponent {
       actions.push(createAction);
     }else {
       let {layer} = this.props;
-      let {title, fields}= this.props.config.steps[this.state.step];
+      let currentStep = this.stepContent[this.state.step-1];
+      let fields = currentStep.fields();
+      let title = currentStep.title();
       let headline = (<h1>{title}</h1>)
       let fieldItems = fields.map( (d, i) => {
-        let {subtitle, api_name, type} = d;
+        let {subtitle, name, type, values} = d;
         let field;
         if(type === "text") {
-          field = textFieldForKey(api_name, this.state[api_name], this._handleInputChange.bind(this), subtitle)
+          field = textFieldForKey(name, this.state[name], this._handleInputChange.bind(this), subtitle)
+        }else if(type === "select") {
+          field = <Select keyName={name} items={values} value={this.state[name]} callback={this._handleInputChange.bind(this)} label={subtitle}/>;
         }else if(type === "fields") {
-          field = selectFieldForKey(api_name, this.menuItems(this.apiItems), this.state[api_name], this._handleInputChange.bind(this), subtitle);
+          values = Promise.resolve(this.apiItems)
+          field = <Select keyName={name} items={values} value={this.state[name]} callback={this._handleInputChange.bind(this)} label={subtitle}/>;
         }
         const elem = (<div key={i}>{field}<br/></div>);
         return elem;
@@ -135,7 +148,7 @@ export default class LayerImport extends React.PureComponent {
       <div className="import">
         <RaisedButton primary={true} onClick={this._handleOpen.bind(this)} label={"Create Layer"}/>
         <Dialog open={this.state.show} title="Create Layer" modal={false} onRequestClose={this._handleClose.bind(this)} actions={actions}>
-          <Wizard stepContent={this.stepContent} step={this.state.step} steps={this.state.steps} prev={this.prev.bind(this)} next={this.next.bind(this)}>{stepElem}</Wizard>
+          <Wizard stepContent={this.stepTitles} step={this.state.step} steps={this.state.steps} prev={this.prev.bind(this)} next={this.next.bind(this)}>{stepElem}</Wizard>
         </Dialog>
       </div>
     )
