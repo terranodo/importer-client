@@ -10,6 +10,8 @@ import Importer from '../src/components/importer';
 import Step from '../src/components/step';
 import UploaderLink from '../src/components/uploadLink';
 
+import td from 'testdouble';
+
 const mockStore = configureMockStore();
 const store = mockStore();
 
@@ -34,6 +36,32 @@ describe('Importer', () => {
     });
     it('does not renders <UploaderLink /> component', () => {
       expect(wrapper.find(UploaderLink)).to.have.length(0);
+    });
+  });
+  describe('#componentWillReceiveProps', () => {
+    let wrapper, getUploadedFiles;
+    beforeEach(() => {
+      getUploadedFiles = td.function();
+      wrapper = shallow(<Importer getUploadedFiles={getUploadedFiles}/>);
+    });
+    describe('uploding finished but no data yet', () => {
+      it('calls getUploadedFiles', () => {
+        wrapper.setProps({uploads: { importLayers: { started: false }, status: 'UPLOADED'}})
+        expect(getUploadedFiles).to.have.been.called;
+      });
+    });
+    describe('upload is started and running', () => {
+      it('calls getuploadedFiles after 2000 millisecond timeout', (done) => {
+        wrapper.setProps({uploads: { importLayers: { started: true}, status: 'UPLOADED'}})
+        expect(getUploadedFiles).to.have.been.called;
+        setTimeout(done, 2000);
+      }).timeout(5000);
+    });
+    describe('upload is finished', () => {
+      it('sets the step to 2', () => {
+        wrapper.setProps({uploads: { data: {}, importLayers: { started: false }, status: 'UPLOADED'}})
+        expect(wrapper.state('step')).to.equal(2);
+      });
     });
   });
 });

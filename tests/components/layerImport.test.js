@@ -13,8 +13,6 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
 import td from 'testdouble';
 
-
-
 describe('LayerImport', () => {
   let defaultConfig, layerName;
   beforeEach(() => {
@@ -85,5 +83,25 @@ describe('LayerImport', () => {
       expect(configureLayer).to.have.been.calledWith(result, 1);
       wrapper.detach();
     });
-  })
+  });
+  describe('#componentWillReceiveProps', () => {
+    it('sets importing state', () => {
+      const layer = { name: 'Test', import_status: ''};
+      const wrapper = shallow(<LayerImport config={defaultConfig} layer={layer}/>);
+      wrapper.setProps({id: 1, uploads: {importLayers: { single: []}}});
+      expect(wrapper.state('importing')).to.equal(false);
+    });
+    describe('layer is imported', () => {
+      let props;
+      beforeEach(() => {
+        props = {id: 0, uploads: {importLayers: { single: [{success: true, started: true}]}}};
+      });
+      it('sets importing state', () => {
+        const layer = { name: 'Test', import_status: ''};
+        const wrapper = shallow(<LayerImport config={defaultConfig} layer={layer}/>);
+        wrapper.setProps(props);
+        expect(wrapper.state('importing')).to.equal(true);
+      });
+    });
+  });
 });

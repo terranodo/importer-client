@@ -50,11 +50,6 @@ export default class LayerImport extends React.PureComponent {
     }
     this.setState({importing: singleImportStarted(nextProps, nextProps.id) });
   }
-  generateApiItems(layer) {
-    return configArray.map( (d, index) => {
-      return {title: d.title, value: d.api_name };
-    });
-  }
   next() {
     this.setState({
       step: this.state.step+1
@@ -88,15 +83,6 @@ export default class LayerImport extends React.PureComponent {
     delete values.show;
     this.props.configureLayerWithConfig(importLayerConfig(this.stepContent, values), this.props.id);
     this.setState({importing: true});
-  }
-  menuItems(items) {
-    return items.map((item, index) => (
-      <MenuItem
-        key={index}
-        value={item}
-        primaryText={item}
-      />
-    ));
   }
   render() {
     let stepElem;

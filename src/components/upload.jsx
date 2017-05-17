@@ -29,11 +29,9 @@ class Uploader extends React.PureComponent {
   render() {
     const progress = this.state.showProgress ? (<CircularProgress />) : this.state.text;
     return (
-      <div>
-        <Dropzone multiple={false} onDrop={this.onDrop.bind(this)}>
-          <div>{progress}</div>
-        </Dropzone>
-      </div>
+      <Dropzone multiple={false} onDrop={this.onDrop.bind(this)}>
+        <div>{progress}</div>
+      </Dropzone>
     )
   }
 };

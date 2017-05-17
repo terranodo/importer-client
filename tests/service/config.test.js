@@ -11,7 +11,7 @@ describe('config', () => {
   });
   describe('#defaultConfig', () => {
     it('returns result', () => {
-      return assert.deepEqual(getDefaultConfig(), defaultConfig);
+      return expect(getDefaultConfig()).to.deep.equal(defaultConfig);
     });
   });
   describe('#convertConfigToSteps', () => {
@@ -47,7 +47,7 @@ describe('config', () => {
       let step = layerName();
       step(layer, options)
       let steps = [step];
-      return assert.deepEqual(importLayerConfig(steps, values), layerConfig);
+      return expect(importLayerConfig(steps, values)).to.deep.equal(layerConfig);
     });
   });
       //let layerConfig = { index: 0, permissions: {'users':{'AnonymousUser':['change_layer_data', 'download_resourcebase', 'view_resourcebase']}}, configureTime: true, convert_to_date: ['date'], editable: true, start_date: 'date', end_date: null, layer_name: name}

@@ -17,7 +17,7 @@ describe('uploadFile', () => {
         fetchMock.restore();
       });
       it('returns result', () => {
-        return assert.becomes(uploadFiles(server,[]), {state: '', id: 1, count: 1});
+        expect(uploadFiles(server,[])).to.become({state: '', id: 1, count: 1});
       });
     });
 	});
@@ -37,7 +37,7 @@ describe('configure', () => {
       fetchMock.restore();
     });
     it('returns result', () => {
-      return assert.becomes(configure(server,id,{}), {});
+      expect(configure(server,id,{})).to.become({});
     });
   });
 });
@@ -56,7 +56,7 @@ describe('#importAll', () => {
       fetchMock.restore();
     });
     it('returns result', () => {
-      return assert.becomes(importAll(server,id), { layers: 3});
+      expect(importAll(server,id)).to.become({ layers: 3});
     });
   });
 });
@@ -82,7 +82,7 @@ describe('#allUploadedData', () => {
       fetchMock.restore();
     });
     it('returns result', () => {
-      return assert.becomes(allUploadedData(server), result);
+      expect(allUploadedData(server)).to.become(result);
     });
   });
 });
@@ -108,7 +108,7 @@ describe('#uploadedData', () => {
       fetchMock.restore();
     });
     it('returns result', () => {
-      return assert.becomes(uploadedData(server, id), data);
+      expect(uploadedData(server, id)).to.become(data);
     });
   });
 });
@@ -136,7 +136,7 @@ describe('#genericPost', () => {
       fetchMock.restore();
     });
     it('returns user result', () => {
-      return assert.becomes(genericPost(server, 'account/ajax_lookup', data), result);
+      expect(genericPost(server, 'account/ajax_lookup', data)).to.become(result);
     });
   });
 });
@@ -164,7 +164,7 @@ describe('#getUsers', () => {
       fetchMock.restore();
     });
     it('returns user result', () => {
-      return assert.becomes(getUsers(server, data), result);
+      expect(getUsers(server, data)).to.become(result);
     });
   });
 });

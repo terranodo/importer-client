@@ -3,58 +3,58 @@ import {uploadSuccess, uploadData, getUploadData, uploadId, isLayerImported, sin
 describe('#uploadSuccess', () => {
   describe('status is success', () => {
     it('returns true', () => {
-      assert.equal(uploadSuccess({uploads: { status: "UPLOADED"}}), true);
+      expect(uploadSuccess({uploads: { status: "UPLOADED"}})).to.equal(true);
     });
   });
   describe('status is not set', () => {
     it('returns false', () => {
-      assert.equal(uploadSuccess({uploads: {status: undefined}}), false);
+      expect(uploadSuccess({uploads: {status: undefined}})).to.equal(false);
     });
   });
 })
 describe('#uploadData', () => {
   describe('data is set', () => {
     it('returns true', () => {
-      assert.equal(uploadData({uploads: { data: [ {} ]}}), true);
+      expect(uploadData({uploads: { data: [ {} ]}})).to.equal(true);
     });
   });
   describe('data is undefined', () => {
     it('returns false', () => {
-      assert.equal(uploadData({uploads: { data: undefined}}), false);
+      expect(uploadData({uploads: { data: undefined}})).to.equal(false);
     });
   });
 })
 describe('#getUploadData', () => {
   it('returns data', () => {
-    assert.deepEqual(getUploadData({uploads: { data: [{id: 1}]}}), [{id: 1}]);
+    expect(getUploadData({uploads: { data: [{id: 1}]}})).to.deep.equal([{id: 1}]);
   });
 });
 describe('#uploadId', () => {
   it('returns id', () => {
-    assert.equal(uploadId({uploads: {id: 1}}), 1);
+    expect(uploadId({uploads: {id: 1}})).to.equal(1);
   });
 });
 describe('#isLayerImported', () => {
   describe('was successful', () => {
     it('returns true', () => {
-      assert.equal(isLayerImported({uploads: { importLayers: { single: { 1: { success: true}}}}},1), true);
+      expect(isLayerImported({uploads: { importLayers: { single: { 1: { success: true}}}}},1)).to.equal(true);
     });
   })
   describe('not successful', () => {
     it('returns false', () => {
-      assert.equal(isLayerImported({uploads: { importLayers: { single: { }}}},1),false);
+      expect(isLayerImported({uploads: { importLayers: { single: { }}}},1)).to.equal(false);
     });
   })
 });
 describe('#singleImportStarted', () => {
   describe('is import started', () => {
     it('returns true', () => {
-      assert.equal(singleImportStarted({uploads: { importLayers: { single: { 1: { started: true}}}}},1), true);
+      expect(singleImportStarted({uploads: { importLayers: { single: { 1: { started: true}}}}},1)).to.equal(true);
     });
   })
   describe('import not started', () => {
     it('returns false', () => {
-      assert.equal(singleImportStarted({uploads: { importLayers: { single: { }}}},1),false);
+      expect(singleImportStarted({uploads: { importLayers: { single: { }}}},1)).to.equal(false);
     });
   })
 });
