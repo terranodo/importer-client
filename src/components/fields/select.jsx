@@ -10,6 +10,7 @@ export default class Select extends React.PureComponent {
     items: React.PropTypes.object,
     callback: React.PropTypes.func,
     label: React.PropTypes.string,
+    multiple: React.PropTypes.bool,
   };
   constructor(props) {
     super(props);
@@ -23,6 +24,7 @@ export default class Select extends React.PureComponent {
   menuItems(items) {
     return items.map((item, index) => (
       <MenuItem
+        className={'item item-'+index}
         key={index}
         value={item}
         primaryText={item}
@@ -39,6 +41,7 @@ export default class Select extends React.PureComponent {
       floatingLabelText={this.props.label}
       onChange={(event, index, newValue) => { this.props.callback(this.props.keyName, newValue)}}
       value={this.props.value}
+      multiple={this.props.multiple}
       >
       {items}
       </SelectField>);

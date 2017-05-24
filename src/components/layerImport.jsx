@@ -1,12 +1,9 @@
 import React from 'react';
 
 import Dialog from 'material-ui/Dialog';
-import TextField from 'material-ui/TextField';
-import Toggle from 'material-ui/Toggle';
 import Wizard from './step';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
-import {textFieldForKey, selectFieldForKey} from '../componentHelpers'
 import {generateConfigArray, generateTitleArray, createLayerConfigFromConfigArray} from '../services/config'
 import MenuItem from 'material-ui/MenuItem';
 
@@ -16,6 +13,7 @@ injectTapEventPlugin();
 import {isLayerImported, singleImportStarted} from '../state/uploads/selectors';
 import {convertConfigToSteps, importLayerConfig} from '../services/config';
 import Select from './fields/select';
+import TextField from './fields/select';
 
 export default class LayerImport extends React.PureComponent {
   static propTypes = {
@@ -113,9 +111,11 @@ export default class LayerImport extends React.PureComponent {
         let {subtitle, name, type, values} = d;
         let field;
         if(type === "text") {
-          field = textFieldForKey(name, this.state[name], this._handleInputChange.bind(this), subtitle)
+          field = <TextField keyName={name} value={this.state[name]} callback={this._handleInputChange.bind(this)} label={subtitle}/>
         }else if(type === "select") {
           field = <Select keyName={name} items={values} value={this.state[name]} callback={this._handleInputChange.bind(this)} label={subtitle}/>;
+        }else if(type === "multiselect") {
+          field = <Select keyName={name} items={values} value={this.state[name]} callback={this._handleInputChange.bind(this)} label={subtitle} multiple={true}/>;
         }else if(type === "fields") {
           values = Promise.resolve(this.apiItems)
           field = <Select keyName={name} items={values} value={this.state[name]} callback={this._handleInputChange.bind(this)} label={subtitle}/>;

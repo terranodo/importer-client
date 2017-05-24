@@ -4,15 +4,11 @@ import {configureUploads} from '../state/uploads/actions'
 import {createLayerConfigWithName} from '../services/config'
 
 function mapStateToProps(state) {
-  const {server, uploads} = state;
+  const {server, uploads, layerImportConfig} = state;
   return {
     server,
     uploads,
-    config: {
-      edit_name: true,
-      edit_time: false,
-      other: []
-    }
+    config: layerImportConfig.config
   };
 }
 const mapDispatchToProps = (dispatch) => {

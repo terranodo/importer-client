@@ -23,15 +23,24 @@ describe('Select', () => {
     const wrapper = shallow(<Select />);
     expect(wrapper.state('loading')).to.equal(true);
 	});
-	it('expects an promise for items', (done) => {
+	it('creates the menuitems for state value', () => {
+    const wrapper = shallow(<Select/>);
+    wrapper.setState({value: ['Test']});
+    expect(wrapper.find(MenuItem)).to.have.length(1);
+	});
+	it('calls the callback', () => {
+    let change = td.function();
+    const wrapper = shallow(<Select callback={change}/>)
+    wrapper.find(SelectField).simulate('change');
+    expect(change).to.have.been.called;
+	});
+	it('needs a promise for items and is resolved in componentDidMount', () => {
     let muiTheme = getMuiTheme();
     let items = Promise.resolve(['a','b'])
     const wrapper = mount(<Select items={items}/>,{
           context: {muiTheme},
           childContextTypes: {muiTheme: React.PropTypes.object}
       });
-    console.log(wrapper.html())
-    expect(wrapper.find(MenuItem)).to.have.length(1);
-    done();
+    expect(Select.prototype.componentDidMount).to.have.been.calledOnce;
 	});
 });
