@@ -18,7 +18,7 @@ var layerName = function() {
     return values;
   }
   steps.valid = function(values) {
-    return values;
+    return true;
   }
   return steps;
 }

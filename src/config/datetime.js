@@ -27,10 +27,10 @@ export default function dateTime() {
       if(values.end_date) { convertToDate.push(values.end_date)};
       return Object.assign({}, values, {configureTime: true, convert_to_date: convertToDate});
     }
-    return {};
+    return values;
   }
   steps.valid = function(values) {
-    return values;
+    return true;
   }
   return steps;
 }
