@@ -126,7 +126,11 @@ describe('functional config', () => {
         step(layer, option);
       });
       it('returns fields', () => {
-        let result = [{name: 'view_resourcebase', type: 'multiselect', values: Promise, subtitle: 'Who can see the layer?'}];
+        let promise = new Promise(function(resolve, reject) {});
+        let result = [ { name: 'view_resourcebase', type: 'multiselect', values: promise, subtitle: 'Who can see the layer' },
+          { name: 'download_resourcebase', type: 'multiselect', values: promise, subtitle: 'Who can download the layer' },
+          { name: 'change_layer_data', type: 'multiselect', values: promise, subtitle: 'Who can download the layer' }
+        ];
         expect(step.fields()).to.deep.equal(result);
       });
       it('return usernames for the first fields values', () => {

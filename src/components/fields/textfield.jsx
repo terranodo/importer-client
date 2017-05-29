@@ -4,13 +4,13 @@ import MuiTextField from 'material-ui/TextField';
 export default class TextField extends React.PureComponent {
   static propTypes = {
     keyName: React.PropTypes.string,
-    value: React.PropTypes.string,
+    value: React.PropTypes.object,
     callback: React.PropTypes.func,
     label: React.PropTypes.string
   };
   constructor(props) {
     super(props);
-    this.state = { loading: true, value: null };
+    this.state = { loading: true, value: "" };
   }
   componentDidMount() {
     this.props.value.then(
@@ -23,7 +23,7 @@ export default class TextField extends React.PureComponent {
       key={this.props.keyName}
       name={this.props.keyName}
       value={this.state.value}
-      onChange={(event, index, newValue) => { this.props.callback(this.props.keyName, newValue)}}
+      onChange={(event, index, newValue) => { this.setState({value: newValue}); this.props.callback(this.props.keyName, newValue)}}
       />
     )
   }

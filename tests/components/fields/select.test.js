@@ -23,9 +23,9 @@ describe('Select', () => {
     const wrapper = shallow(<Select />);
     expect(wrapper.state('loading')).to.equal(true);
 	});
-	it('creates the menuitems for state value', () => {
+		it('creates the menuitems for state value', () => {
     const wrapper = shallow(<Select/>);
-    wrapper.setState({value: ['Test']});
+    wrapper.setState({items: ['Test']});
     expect(wrapper.find(MenuItem)).to.have.length(1);
 	});
 	it('calls the callback', () => {
@@ -43,4 +43,30 @@ describe('Select', () => {
       });
     expect(Select.prototype.componentDidMount).to.have.been.calledOnce;
 	});
+  describe('currentValue', () => {
+    describe('props value set', () => {
+      it('should be equal value', () => {
+        const wrapper = shallow(<Select value={"Test"}/>);
+        expect(wrapper.state('currentValue')).to.equal("Test");
+      });
+      describe('multiple', () => {
+        it('should be equal value', () => {
+          const wrapper = shallow(<Select multiple={true} value={["Test"]}/>);
+          expect(wrapper.state('currentValue')).to.deep.equal(["Test"]);
+        });
+      });
+    });
+    describe('props value not set', () => {
+      it('should be null', () => {
+        const wrapper = shallow(<Select/>);
+        expect(wrapper.state('currentValue')).to.equal(null);
+      });
+      describe('multiple', () => {
+        it('should be empty array', () => {
+          const wrapper = shallow(<Select multiple={true} />);
+          expect(wrapper.state('currentValue')).to.deep.equal([]);
+        });
+      });
+    });
+  });
 });

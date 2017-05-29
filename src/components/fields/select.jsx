@@ -6,7 +6,6 @@ import MenuItem from 'material-ui/MenuItem';
 export default class Select extends React.PureComponent {
   static propTypes = {
     keyName: React.PropTypes.string,
-    value: React.PropTypes.string,
     items: React.PropTypes.object,
     callback: React.PropTypes.func,
     label: React.PropTypes.string,
@@ -14,12 +13,15 @@ export default class Select extends React.PureComponent {
   };
   constructor(props) {
     super(props);
-    this.state = { loading: true, value: null };
+    let currentValue = props.value ? props.value : (props.multiple ? [] : null)
+    this.state = { loading: true, items: null, currentValue: currentValue };
   }
   componentDidMount() {
-    this.props.items.then(
-      value => this.setState({loading: false, value: value}),
-      error => this.setState({loading: false, error: error}));
+    if(this.props.items) {
+      this.props.items.then(
+        result => this.setState({loading: false, items: result}),
+        error => this.setState({loading: false, error: error}));
+    }
   }
   menuItems(items) {
     return items.map((item, index) => (
@@ -27,23 +29,30 @@ export default class Select extends React.PureComponent {
         className={'item item-'+index}
         key={index}
         value={item}
+        insetChildren={this.props.multiple}
+        checked={this.props.multiple && this.state.currentValue && this.state.currentValue.indexOf(item) > -1}
         primaryText={item}
       />
     ));
   }
+  handleChange(event, index, newValues) {
+    this.setState({currentValue: newValues});
+    this.props.callback(this.props.keyName, newValues)
+  }
   render() {
-    let items;
-    if(this.state.value) {
-      items = ( this.menuItems(this.state.value) )
+    let selectItems;
+    const {currentValue, items} = this.state;
+    if(items) {
+      selectItems = ( this.menuItems(items) )
     }
     return (<SelectField
       key={this.props.keyName}
       floatingLabelText={this.props.label}
-      onChange={(event, index, newValue) => { this.props.callback(this.props.keyName, newValue)}}
-      value={this.props.value}
+      onChange={this.handleChange.bind(this)}
+      value={currentValue}
       multiple={this.props.multiple}
       >
-      {items}
+      {selectItems}
       </SelectField>);
   }
 };

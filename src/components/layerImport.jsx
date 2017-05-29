@@ -13,7 +13,7 @@ injectTapEventPlugin();
 import {isLayerImported, singleImportStarted} from '../state/uploads/selectors';
 import {convertConfigToSteps, importLayerConfig} from '../services/config';
 import Select from './fields/select';
-import TextField from './fields/select';
+import TextField from './fields/textfield';
 
 export default class LayerImport extends React.PureComponent {
   static propTypes = {
@@ -108,14 +108,14 @@ export default class LayerImport extends React.PureComponent {
       let title = currentStep.title();
       let headline = (<h1>{title}</h1>)
       let fieldItems = fields.map( (d, i) => {
-        let {subtitle, name, type, values} = d;
+        let {subtitle, name, type, value, values} = d;
         let field;
         if(type === "text") {
-          field = <TextField keyName={name} value={this.state[name]} callback={this._handleInputChange.bind(this)} label={subtitle}/>
+          field = <TextField keyName={name} value={value} callback={this._handleInputChange.bind(this)} label={subtitle}/>
         }else if(type === "select") {
-          field = <Select keyName={name} items={values} value={this.state[name]} callback={this._handleInputChange.bind(this)} label={subtitle}/>;
+          field = <Select key={name} keyName={name} items={values} value={this.state[name]} callback={this._handleInputChange.bind(this)} label={subtitle}/>;
         }else if(type === "multiselect") {
-          field = <Select keyName={name} items={values} value={this.state[name]} callback={this._handleInputChange.bind(this)} label={subtitle} multiple={true}/>;
+          field = <Select key={name} keyName={name} items={values} value={this.state[name]} callback={this._handleInputChange.bind(this)} label={subtitle} multiple={true}/>;
         }else if(type === "fields") {
           values = Promise.resolve(this.apiItems)
           field = <Select keyName={name} items={values} value={this.state[name]} callback={this._handleInputChange.bind(this)} label={subtitle}/>;
