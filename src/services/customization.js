@@ -1,14 +1,14 @@
-import configDefaults from '../config/defaults'
+import customizationDefaults from '../customization/defaults'
 
-export const getDefaultConfig = () => {
+export const getDefaultCustomization = () => {
   return ["layerName"];
 }
 export const convertConfigToSteps = (config, layer, options = {}) => {
   let steps = [];
   config.forEach((c) => {
     let stepObj;
-    if(configDefaults[c]) {
-      stepObj = configDefaults[c]();
+    if(customizationDefaults[c]) {
+      stepObj = customizationDefaults[c]();
     }else {
       stepObj = c();
     }

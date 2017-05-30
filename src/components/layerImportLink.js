@@ -1,7 +1,7 @@
 import {connect} from 'react-redux';
 import LayerImport from './layerImport'
 import {configureUploads} from '../state/uploads/actions'
-import {createLayerConfigWithName} from '../services/config'
+import {createLayerConfigWithName} from '../services/customization'
 
 function mapStateToProps(state) {
   const {server, uploads, layerImportConfig} = state;

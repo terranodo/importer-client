@@ -1,17 +1,17 @@
 import td from 'testdouble';
-import dateTime from '../../src/config/datetime';
-import layerName from '../../src/config/layername';
-import geogig from '../../src/config/geogig';
-import {getDefaultConfig, importLayerConfig, convertConfigToSteps, __RewireAPI__ as actionsRewireAPI} from '../../src/services/config';
+import dateTime from '../../src/customization/datetime';
+import layerName from '../../src/customization/layername';
+import geogig from '../../src/customization/geogig';
+import {getDefaultCustomization, importLayerConfig, convertConfigToSteps, __RewireAPI__ as actionsRewireAPI} from '../../src/services/customization';
 
-describe('config', () => {
-  let defaultConfig;
+describe('customization', () => {
+  let defaultcustomization;
   beforeEach( () => {
-    defaultConfig = ["layerName"]
+    defaultcustomization = ["layerName"]
   });
-  describe('#defaultConfig', () => {
+  describe('#defaultcustomization', () => {
     it('returns result', () => {
-      return expect(getDefaultConfig()).to.deep.equal(defaultConfig);
+      return expect(getDefaultCustomization()).to.deep.equal(defaultcustomization);
     });
   });
   describe('#convertConfigToSteps', () => {
@@ -31,7 +31,7 @@ describe('config', () => {
         let defaultSpy = td.function();
         let defaultSpyStep = td.function();
         td.when(defaultSpy()).thenReturn(defaultSpyStep);
-        actionsRewireAPI.__Rewire__('configDefaults', {"layerName": defaultSpy});
+        actionsRewireAPI.__Rewire__('customizationDefaults', {"layerName": defaultSpy});
         let layer = {layerName: 'Test'};
         convertConfigToSteps(["layerName"], layer);
         return expect(defaultSpyStep).to.have.been.called;

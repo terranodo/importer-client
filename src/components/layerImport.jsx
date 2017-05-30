@@ -4,14 +4,13 @@ import Dialog from 'material-ui/Dialog';
 import Wizard from './step';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
-import {generateConfigArray, generateTitleArray, createLayerConfigFromConfigArray} from '../services/config'
 import MenuItem from 'material-ui/MenuItem';
 
 import injectTapEventPlugin from 'react-tap-event-plugin';
 injectTapEventPlugin();
 
 import {isLayerImported, singleImportStarted} from '../state/uploads/selectors';
-import {convertConfigToSteps, importLayerConfig} from '../services/config';
+import {convertConfigToSteps, importLayerConfig} from '../services/customization';
 import Select from './fields/select';
 import TextField from './fields/textfield';
 
@@ -24,8 +23,12 @@ export default class LayerImport extends React.PureComponent {
   };
   constructor(props) {
     super(props);
+    let baseConfig = {};
+    if(props.server) {
+      baseConfig = { baseUrl: props.server.url };
+    }
     this.apiItems = Object.keys(props.layer);
-    this.stepContent = convertConfigToSteps(props.config, props.layer);
+    this.stepContent = convertConfigToSteps(props.config, props.layer, baseConfig);
     this.stepTitles = this.stepContent.map( (d) => { return d.title()})
     this.stepTitles.push("Import");
     this.state= {
@@ -42,6 +45,7 @@ export default class LayerImport extends React.PureComponent {
     });
   };
   componentWillReceiveProps(nextProps) {
+    this.stepContent = convertConfigToSteps(nextProps.config, nextProps.layer);
     if(isLayerImported(nextProps, nextProps.id)) {
       this._handleClose();
       this.setState({step: 1, layerName: nextProps.layer.name});
