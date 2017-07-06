@@ -19,13 +19,13 @@ describe('uploads', () => {
     };
   });
   it('has initial state', () => {
-    assert.deepEqual(uploads(undefined, {}), defaultState)
+    expect(uploads(undefined, {})).to.deep.equal(defaultState)
   });
   describe('SET_UPLOAD_ID', () => {
     it('sets the upload id in state', () => {
       let action = { type: SET_UPLOAD_ID, uploadId: 1};
       let state = Object.assign({}, defaultState, {id: 1});
-      assert.deepEqual(uploads(undefined, action),state);
+      expect(uploads(undefined, action)).to.deep.equal(state);
     });
   });
   describe('UPLOAD_FILE_SUCCESS', () => {
@@ -33,7 +33,7 @@ describe('uploads', () => {
       let result = { id: 1, state: 'working', count: 1};
       let action = { type: UPLOAD_FILE_SUCCESS, result};
       let state = Object.assign({}, defaultState, {id: 1, status: 'working', count: 1, success: true});
-      assert.deepEqual(uploads(undefined, action),state);
+      expect(uploads(undefined, action)).to.deep.equal(state);
     });
   });
   describe('CONFIGURE_SUCCESS', () => {
@@ -41,7 +41,7 @@ describe('uploads', () => {
       let result = { id: 1, status: 'success', count: 1};
       let action = { type: CONFIGURE_SUCCESS, index: 1, result};
       let state = Object.assign({}, defaultState, {importLayers: { single: {1: { success: true}}}});
-      assert.deepEqual(uploads(undefined, action),state);
+      expect(uploads(undefined, action)).to.deep.equal(state);
     });
   });
   describe('UPLOADED_DATA_SUCCESS', () => {
@@ -49,7 +49,7 @@ describe('uploads', () => {
       let result = { id: 1, status: "UPLOADED" };
       let action = { type: UPLOADED_DATA_SUCCESS, result};
       let state = Object.assign({}, defaultState, {data: result});
-      assert.deepEqual(uploads(undefined, action),state);
+      expect(uploads(undefined, action)).to.deep.equal(state);
     });
   });
   describe('IMPORT_ALL_SUCCESS', () => {
@@ -57,7 +57,7 @@ describe('uploads', () => {
       let result = { id: 1, status: "UPLOADED" };
       let action = { type: IMPORT_ALL_SUCCESS, result};
       let state = Object.assign({}, defaultState, {importLayers: { started: false}});
-      assert.deepEqual(uploads(undefined, action),state);
+      expect(uploads(undefined, action)).to.deep.equal(state);
     });
   });
   describe('IMPORT_ALL_STARTED', () => {
@@ -65,7 +65,7 @@ describe('uploads', () => {
       let result = { id: 1, status: "UPLOADED" };
       let action = { type: IMPORT_ALL_STARTED, result};
       let state = Object.assign({}, defaultState, {importLayers: { started: true}});
-      assert.deepEqual(uploads(undefined, action),state);
+      expect(uploads(undefined, action)).to.deep.equal(state);
     });
   });
 });

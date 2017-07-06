@@ -11,7 +11,7 @@ const mockStore = configureMockStore(middlewares);
 describe('getUploadId', () => {
   it('creates an action for GET_UPLOAD_ID', () => {
     const expectedAction = {type: GET_UPLOAD_ID}
-    assert.deepEqual(getUploadId(), expectedAction);
+    expect(getUploadId()).to.deep.equal(expectedAction);
   });
 });
 describe('upload', () => {
@@ -26,14 +26,14 @@ describe('upload', () => {
     const store = mockStore({server: { url: ''}});
     const expectedAction = [{type: UPLOAD_FILE_SUCCESS, result: result}];
     return store.dispatch(upload([])).then( () => {
-      assert.deepEqual(store.getActions(), expectedAction);
+      expect(store.getActions()).to.deep.equal(expectedAction);
     });
   });
 });
 describe('importStarted', () => {
   it('creates an action for IMPORT_STARTED', () => {
     const expectedAction = {type: IMPORT_STARTED, index: 1}
-    assert.deepEqual(importStarted(1), expectedAction);
+    expect(importStarted(1)).to.deep.equal(expectedAction);
   });
 });
 describe('configure', () => {
@@ -48,8 +48,7 @@ describe('configure', () => {
     const store = mockStore({server: { url: ''}, uploads: { id: 1 }});
     const expectedAction = [{type: IMPORT_STARTED, index: 1}, {type: CONFIGURE_SUCCESS, index: 1, result: result}];
     return store.dispatch(configureUploads({},1)).then( () => {
-      console.log(store.getActions())
-      assert.deepEqual(store.getActions(), expectedAction);
+      expect(store.getActions()).to.deep.equal(expectedAction);
     });
   });
 });
@@ -65,7 +64,7 @@ describe('#getUploadedData', () => {
     const store = mockStore({server: { url: ''}, uploads: { id: 1 }});
     const expectedAction = [{type: UPLOADED_DATA_SUCCESS, result: result}];
     return store.dispatch(getUploadedData()).then( () => {
-      assert.deepEqual(store.getActions(), expectedAction);
+      expect(store.getActions()).to.deep.equal(expectedAction);
     });
   });
 });
@@ -84,7 +83,7 @@ describe('#importAllLayers', () => {
     const store = mockStore({server: { url: ''}, uploads: { id: 1 }});
     const expectedAction = [{type: IMPORT_ALL_STARTED, startImport: true},{type: IMPORT_ALL_SUCCESS, result: result},{type: UPLOADED_DATA_SUCCESS, result: result}];
     return store.dispatch(importAllLayers()).then( () => {
-      assert.deepEqual(store.getActions(), expectedAction);
+      expect(store.getActions()).to.deep.equal(expectedAction);
     });
   });
 });

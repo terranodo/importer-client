@@ -13,7 +13,7 @@ describe('upload files', () => {
   })
   describe('#uploadSuccess', () => {
     it('returns true', () => {
-      assert.equal(uploadSuccess(store.getState()), true);
+      expect(uploadSuccess(store.getState())).to.equal(true);
     })
   })
 });
@@ -25,7 +25,7 @@ describe('get uploaded data', () => {
   })
   describe('#uploadSuccess', () => {
     it('returns true', () => {
-      assert.deepEqual(getUploadData(store.getState()), {id: 1, complete: true});
+      expect(getUploadData(store.getState())).to.deep.equal({id: 1, complete: true});
     })
   })
 });
@@ -37,7 +37,7 @@ describe('configure single layer', () => {
   })
   describe('#isLayerImported', () => {
     it('returns true', () => {
-      assert.equal(isLayerImported(store.getState(),1), true);
+      expect(isLayerImported(store.getState(),1)).to.equal(true);
     })
   })
 });
@@ -49,7 +49,7 @@ describe('import single layer', () => {
   })
   describe('#singleImportStarted', () => {
     it('returns true', () => {
-      assert.equal(singleImportStarted(store.getState(),1), true);
+      expect(singleImportStarted(store.getState(),1)).to.equal(true)
     })
   })
 });

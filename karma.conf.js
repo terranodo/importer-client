@@ -8,7 +8,6 @@ module.exports = function (config) {
     browsers: [ 'PhantomJS' ],
     files: [
       'node_modules/whatwg-fetch/fetch.js',
-      'node_modules/babel-polyfill/dist/polyfill.js',
       'tests/tests.bundle.js',
       { pattern: 'src/**/*', watched: false, included: false, served: true, nocache: true }
     ],
@@ -25,7 +24,9 @@ module.exports = function (config) {
 		coverageReporter: {
       dir: 'reports',
       reporters:[
-        {type: 'lcovonly', subdir: 'coverage/', file: 'lcov.info'},
+        { type: 'html', subdir: 'html' },
+        { type: 'lcovonly', subdir: 'lcov' },
+        { type: 'text-summary'}
       ]
     }
   });
